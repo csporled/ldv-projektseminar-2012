@@ -1,6 +1,6 @@
 # Projektseminar
 
-## Einleintung
+## Einleitung
 
 Ein Projektseminar ist eine Pflichtveranstaltung im Rahmen des neu
 angesetzten BA-Studienganges im Fach Computerlinguistk
