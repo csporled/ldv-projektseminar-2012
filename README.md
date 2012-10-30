@@ -16,11 +16,11 @@ Während der Arbeit am Projekt lernen die Teilnehmer,
 
 ## Projektteilnehmer
 
-* David Alfter
-* Andrei Beliankou
-* Nils Nibergall
-* Caroline Sporleder
-* Julian Vaudroz
+* [David Alfter](https://github.com/daalft)
+* [Andrei Beliankou](https://github.com/arbox)
+* [Nils Nibergall](https://github.com/DaNylez)
+* [Caroline Sporleder](https://github.com/csporled)
+* [Julian Vaudroz](https://github.com/juvaud)
 
 ## Projektziel
 
