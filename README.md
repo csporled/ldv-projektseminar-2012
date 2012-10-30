@@ -25,3 +25,9 @@ Während der Arbeit am Projekt lernen die Teilnehmer,
 ## Projektziel
 
 Erstellung einer computerlinguistischen Anwendung.
+
+## Dateien und Verzeichnisse
+* doc/prettyXmlItems.xml - ein Teil vom Index im XML-Format
+
+## Externe Quellen
+* XML-Schemata - https://github.com/itsjeyd/regesten-schemas/blob/master/sbr-regesten.xsd
