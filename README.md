@@ -18,7 +18,7 @@ Während der Arbeit am Projekt lernen die Teilnehmer,
 
 * [David Alfter](https://github.com/daalft)
 * [Andrei Beliankou](https://github.com/arbox)
-* [Nils Nibergall](https://github.com/DaNylez)
+* [Nils Niebergall](https://github.com/DaNylez)
 * [Caroline Sporleder](https://github.com/csporled)
 * [Julian Vaudroz](https://github.com/juvaud)
 
