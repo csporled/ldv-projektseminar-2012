@@ -7,7 +7,13 @@ package classtypes;
  */
 public class BiRelation {
 
+	/**
+	 * People in this relation
+	 */
 	private Person p1, p2;
+	/**
+	 * Specification of this relation
+	 */
 	private String type;
 	/**
 	 * Constructor.
