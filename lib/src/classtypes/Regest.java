@@ -15,6 +15,9 @@ import javax.persistence.Id;
 @Entity
 public class Regest {
 
+	/**
+	 * Id used by database. DO NOT ACCESS OR MODIFY THIS ID!
+	 */
 	@Id @GeneratedValue
 	private int internid;
 	/**
