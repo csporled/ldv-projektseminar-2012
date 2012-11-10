@@ -5,14 +5,20 @@ import java.util.ArrayList;
 import javax.persistence.Embeddable;
 /**
  * Represents a simple Person.
- * Person has names, non of which are mandatory.
+ * Person has names, none of which are mandatory.
  * @author David Alfter
  * @version 0.0.1
  */
 @Embeddable
 public class Person {
 
+	/**
+	 * Names of Person
+	 */
 	private String title, forename, surname, maidenname;
+	/**
+	 * ArrayList of additional or other names
+	 */
 	private ArrayList<String> otherNames;
 	/**
 	 * Constructor.
@@ -31,6 +37,7 @@ public class Person {
 	 * Returns the title.
 	 * Preferably first check whether or not title is set before invocation of this method.
 	 * @return the title
+	 * @see hasTitle()
 	 */
 	public String getTitle () {
 		return title;
@@ -53,6 +60,7 @@ public class Person {
 	 * Returns the first name.
 	 * Preferably first check whether or not first name is set before invocation of this method.
 	 * @return the first name
+	 * @see hasFirstname()
 	 */
 	public String getForename () {
 		return forename;
@@ -75,6 +83,7 @@ public class Person {
 	 * Returns the surname.
 	 * Preferably first check whether or not surname is set before invocation of this method.
 	 * @return the surname
+	 * @see hasSurname()
 	 */
 	public String getSurname () {
 		return surname;
@@ -97,6 +106,7 @@ public class Person {
 	 * Returns the maiden name.
 	 * Preferably first check whether or not maiden name is set before invocation of this method.
 	 * @return the maiden name
+	 * @see hasMaidenname()
 	 */
 	public String getMaidenname () {
 		return maidenname;
@@ -127,6 +137,7 @@ public class Person {
 	 * Returns an ArrayList<String> containing other names.
 	 * Preferably first check whether other names have been set before invocation of this method.
 	 * @return an ArrayList of String containing other names 
+	 * @see hasOtherNames()
 	 */
 	public ArrayList<String> getOtherNames () {
 		return otherNames;

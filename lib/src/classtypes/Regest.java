@@ -17,8 +17,17 @@ public class Regest {
 
 	@Id @GeneratedValue
 	private int internid;
+	/**
+	 * Id value of this regest
+	 */
 	private String id;
+	/**
+	 * ArrayList of Person to store people
+	 */
 	private ArrayList<Person> people;
+	/**
+	 * ArrayList of String to store additional information.
+	 */
 	private ArrayList<String> content;
 	/**
 	 * Constructor. The only mandatory field is id.
@@ -76,6 +85,7 @@ public class Regest {
 	 * Returns the people contained in this regest as an ArrayList<People>.
 	 * Preferably first check whether or not this regest contains people before invocation of this method.
 	 * @return an ArrayList of Person
+	 * @see hasPeople()
 	 */
 	public ArrayList<Person> getPeople () {
 		return people;
@@ -84,6 +94,7 @@ public class Regest {
 	 * Returns the text contained in this regest as an ArrayList<String>.
 	 * Preferable first check whether or not this regest contains text before invocation of this method.
 	 * @return an ArrayList of String
+	 * @see hasContent()
 	 */
 	public ArrayList<String> getContent () {
 		return content;
