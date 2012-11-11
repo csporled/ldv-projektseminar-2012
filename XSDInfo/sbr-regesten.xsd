@@ -1,0 +1,512 @@
+<!-- taken from https://github.com/itsjeyd/regesten-schemas/blob/master/sbr-regesten.xsd -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="sbr-regesten">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="preface" type="infotype" />
+	<xs:element name="listBibl" type="listBibl" />          <!-- see (1) -->
+	<xs:element name="abbrev-list" type="abbrev-list" />    <!-- see (2) -->
+	<xs:element name="initials-list" type="abbrev-list" />  <!-- see (2) -->
+	<xs:element name="regesten" type="regesten" />	        <!-- see (3) -->
+	<xs:element name="archive-list" type="generic-list" />  <!-- see (4) -->
+	<xs:element name="index" type="index" />	        <!-- see (5) -->
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <!-- (1) Literaturverzeichnis -->
+
+  <xs:complexType name="listBibl">
+    <xs:sequence>
+      <xs:element name="listBibl-info" type="stringtype" />
+      <xs:element name="bibl" type="bibl" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="bibl">
+    <xs:simpleContent>
+      <xs:extension base="stringtype">
+	<xs:attribute name="id" type="biblidtype" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:simpleType name="biblidtype">
+    <xs:restriction base="idtype">
+      <xs:pattern value="bibl_[0-9]+" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <!-- (2) Abkuerzungsverzeichnis / Siglen  -->
+
+  <xs:complexType name="abbrev-list">
+    <xs:sequence>
+      <xs:element name="list-info" type="stringtype" minOccurs="0" />
+      <xs:element name="entry" type="abbrev" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="abbrev">
+    <xs:sequence>
+      <xs:element name="abbr" type="stringtype" />
+      <xs:element name="expan" type="stringtype" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!-- (3) Regesten -->
+
+  <xs:complexType name="regesten">
+    <xs:sequence>
+      <xs:element name="regest" type="regest" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="regest">
+    <xs:sequence>
+      <xs:element name="date" type="regest-date" />
+      <xs:element name="location" type="infotype" minOccurs="0" />
+      <xs:element name="type" type="infotype" minOccurs="0" />
+      <xs:element name="content" type="regest-content" />
+      <xs:element name="original-date" type="content-infotype" />
+      <xs:element name="seal" type="content-infotype" />
+      <xs:element name="archives" type="content-infotype" />
+      <xs:element name="print" type="content-infotype" />
+      <xs:element name="translation" type="content-infotype" minOccurs="0" />
+      <xs:element name="original" type="content-infotype" />
+    </xs:sequence>
+    <xs:attribute name="id" type="regidtype" use="required" />
+    <xs:attribute name="title" type="stringtype" />
+    <xs:attribute name="author" type="authortype" />
+  </xs:complexType>
+
+  <!-- (3.1) Date -->
+
+  <xs:complexType name="regest-date" mixed="true">
+    <xs:choice>
+      <xs:sequence>
+	<xs:sequence>
+	  <xs:element name="from" type="datetype" />
+	  <xs:element name="offset" type="offset" minOccurs="0" />
+	</xs:sequence>
+	<xs:sequence>
+	  <xs:element name="to" type="datetype" />
+	  <xs:element name="offset" type="offset" minOccurs="0" />
+	</xs:sequence>
+      </xs:sequence>
+      <xs:sequence>
+	<xs:element name="altDate" type="datetype" minOccurs="0" />
+	<xs:element name="offset" type="offset" minOccurs="0" />
+      </xs:sequence>
+    </xs:choice>
+    <xs:attribute name="exact" type="booleantype" />
+  </xs:complexType>
+
+  <xs:simpleType name="datetype">
+    <xs:restriction base="xs:date" />
+  </xs:simpleType>
+
+  <xs:simpleType name="offset">
+    <xs:restriction base="stringtype">
+      <xs:enumeration value="vor" />
+      <xs:enumeration value="nach" />
+      <xs:enumeration value="um" />
+      <xs:enumeration value="ca." />
+      <xs:enumeration value="kurz nach" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- (3.2) Content -->
+
+  <xs:complexType name="regest-content" mixed="true">
+    <xs:sequence>
+      <xs:element name="issuer" type="stringtype" minOccurs="0" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+	<xs:element name="quote" type="quote" />
+	<xs:element name="name" type="name" />
+	<xs:element name="footnote" type="footnote" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- (3.3) Attributes -->
+
+  <xs:simpleType name="regidtype">
+    <xs:restriction base="idtype">
+      <xs:pattern value="regest_[0-9]+" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="authortype">
+    <xs:restriction base="stringtype">
+      <xs:enumeration value="Ed" />
+      <xs:enumeration value="He" />
+      <xs:enumeration value="Jac" />
+      <xs:enumeration value="Kl" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <!-- (4) Archivverzeichnis -->
+
+  <xs:complexType name="generic-list">
+    <xs:sequence>
+      <xs:element name="entry" type="entry" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="entry">
+    <xs:simpleContent>
+      <xs:extension base="stringtype">
+	<xs:attribute name="title" type="stringtype" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+  <!-- (5) Index -->
+
+  <xs:complexType name="index">
+    <xs:sequence>
+      <xs:element name="index-info" type="stringtype" />
+      <xs:element name="item" type="item" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="item">
+    <xs:sequence>
+      <xs:element ref="item-header" />
+      <xs:element ref="item-body" minOccurs="0" />
+    </xs:sequence>
+    <xs:attribute name="id" type="itemidtype" use="required" />
+    <xs:attribute name="type" type="itemtype" use="required" />
+    <xs:attribute name="value" type="stringtype" use="required" />
+  </xs:complexType>
+
+  <!-- (5.1) Item headers -->
+
+  <xs:element name="item-header" abstract="true" />
+
+  <!-- (5.1.1) Concepts: landmark -->
+
+  <xs:element name="landmark-header" type="landmark-header" substitutionGroup="item-header" />
+
+  <xs:complexType name="landmark-header" mixed="true">
+    <xs:sequence>
+      <xs:element name="geogName" type="geogName" />
+      <xs:element name="mentioned-in" type="mentionings" minOccurs="0" />
+      <xs:element name="index-refs" type="index-refs" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="geogName">
+    <xs:sequence>
+      <xs:element name="name" type="stringtype" />
+      <xs:element name="addNames" type="addNames" minOccurs="0" />
+    </xs:sequence>
+    <xs:attribute name="type" type="stringtype" />
+  </xs:complexType>
+
+  <!-- (5.1.2) Concepts: location -->
+
+  <xs:element name="location-header" type="location-header" substitutionGroup="item-header" />
+
+  <xs:complexType name="location-header" mixed="true">
+    <xs:sequence>
+      <xs:element name="placeName" type="placeName" />
+      <xs:element name="mentioned-in" type="mentionings" minOccurs="0" />
+      <xs:element name="index-refs" type="index-refs" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="placeName">
+    <xs:sequence>
+      <xs:element name="addNames" type="addNames" minOccurs="0" />
+      <xs:element name="settlement" type="settlement" />
+      <xs:element name="reference-point" type="stringtype" minOccurs="0" />
+      <xs:element name="district" type="stringtype" minOccurs="0" />
+      <xs:element name="region" type="region" minOccurs="0" />
+      <xs:element name="country" type="stringtype" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="settlement">
+    <xs:simpleContent>
+      <xs:extension base="stringtype">
+	<xs:attribute name="type" type="stringtype" use="required" />
+	<xs:attribute name="w" type="booleantype" use="required" />
+	<xs:attribute name="w-ref" type="stringtype" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="region">
+    <xs:simpleContent>
+      <xs:extension base="stringtype">
+	<xs:attribute name="type" type="regiontype" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:simpleType name="regiontype">
+    <xs:restriction base="stringtype">
+      <xs:enumeration value="Bundesland" />
+      <xs:enumeration value="Departement" />
+      <xs:enumeration value="Provinz" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- (5.1.3) Concepts: person -->
+
+  <xs:element name="person-header" type="person-header" substitutionGroup="item-header" />
+
+  <xs:complexType name="person-header" mixed="true">
+    <xs:sequence>
+      <xs:element name="person" type="person" />
+      <xs:element name="mentioned-in" type="mentionings" minOccurs="0" />
+      <xs:element name="index-refs" type="index-refs" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="person">
+    <xs:sequence>
+      <xs:element name="persName" type="persName" />
+      <xs:element name="description" type="content" minOccurs="0" />
+      <xs:element name="mentioned-in" type="mentionings" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="related_concepts" type="related_concepts" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="id" type="persidtype" use="required" />
+    <xs:attribute name="itemid" type="idreftype" />
+  </xs:complexType>
+
+  <xs:complexType name="persName" mixed="true">
+    <xs:all>
+      <xs:element name="forename" type="stringtype" minOccurs="0" />
+      <xs:element name="surname" type="stringtype" minOccurs="0" />
+      <xs:element name="genName" type="stringtype" minOccurs="0" />
+      <xs:element name="maidenname" type="stringtype" minOccurs="0" />
+      <xs:element name="roleName" type="stringtype" minOccurs="0" />
+      <xs:element name="addNames" type="addNames" minOccurs="0" />
+    </xs:all>
+  </xs:complexType>
+
+  <xs:simpleType name="persidtype">
+    <xs:restriction base="stringtype">
+      <xs:pattern value="person_[0-9]+" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- (5.1.4) Listings: family -->
+
+  <xs:element name="family-header" type="family-header" substitutionGroup="item-header" />
+
+  <xs:complexType name="family-header" mixed="true">
+    <xs:sequence>
+      <xs:element name="family-name" type="family-name" />
+      <xs:element name="location" type="placeName" minOccurs="0" />
+      <xs:element name="mentioned-in" type="mentionings" minOccurs="0" />
+      <xs:element name="index-refs" type="index-refs" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="family-name">
+    <xs:sequence>
+      <xs:element name="name" type="stringtype" />
+      <xs:element name="addNames" type="addNames" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- (5.1.5) Listings: persongroup -->
+
+  <xs:element name="persongroup-header" type="persongroup-header" substitutionGroup="item-header" />
+
+  <xs:complexType name="persongroup-header" mixed="true">
+    <xs:sequence>
+      <xs:element name="group-name" type="stringtype" />
+      <xs:element name="mentioned-in" type="mentionings" minOccurs="0" />
+      <xs:element name="index-refs" type="index-refs" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- (5.2) Item bodies -->
+
+  <xs:element name="item-body" abstract="true" />
+
+  <!-- (5.2.1) Concepts: landmark, location, person -->
+
+  <xs:element name="concept-body" type="concept-body" substitutionGroup="item-body" />
+
+  <xs:complexType name="concept-body">
+    <xs:sequence>
+      <xs:element name="related_concepts" type="related_concepts" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="related_concepts">
+    <xs:choice maxOccurs="unbounded">
+      <xs:element name="concept" type="concept" />
+      <xs:element name="person" type="person" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="concept">
+    <xs:sequence>
+      <xs:element name="name" type="content" />
+      <xs:element name="description" type="content" minOccurs="0" />
+      <xs:element name="mentioned-in" type="mentionings" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="related_concepts" type="related_concepts" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- (5.2.2) Listings: family, persongroup -->
+
+  <xs:element name="listing-body" type="listing-body" substitutionGroup="item-body" />
+
+  <xs:complexType name="listing-body">
+    <xs:sequence>
+      <xs:element name="members" type="members" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="members">
+    <xs:sequence>
+      <xs:element name="person" type="person" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- (5.3) Attributes -->
+
+  <xs:simpleType name="itemidtype">
+    <xs:restriction base="idtype">
+      <xs:pattern value="item_[0-9]+" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="itemtype">
+    <xs:restriction base="stringtype">
+      <xs:enumeration value="location" />
+      <xs:enumeration value="landmark" />
+      <xs:enumeration value="person" />
+      <xs:enumeration value="family" />
+      <xs:enumeration value="persongroup" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <!-- (6) Shared types -->
+
+  <!-- (6.1) Basic types -->
+
+  <xs:simpleType name="idtype">
+    <xs:restriction base="xs:ID" />
+  </xs:simpleType>
+
+  <xs:simpleType name="idreftype">
+    <xs:restriction base="xs:IDREF" />
+  </xs:simpleType>
+
+  <xs:simpleType name="booleantype">
+    <xs:restriction base="xs:boolean" />
+  </xs:simpleType>
+
+  <xs:simpleType name="stringtype">
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+
+  <!-- (6.2) Content types -->
+
+  <xs:complexType name="infotype" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="footnote" type="footnote" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="content-infotype" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="quote" type="quote" />
+      <xs:element name="footnote" type="footnote" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="content" mixed="true">
+    <xs:sequence>
+      <xs:element name="quote" type="quote" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- (6.2.1) Footnotes -->
+
+  <xs:complexType name="footnote">
+    <xs:complexContent>
+      <xs:extension base="content">
+	<xs:attribute name="id" type="fnidtype" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="fnidtype">
+    <xs:restriction base="idtype">
+      <xs:pattern value="fn_[0-9]+" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- (6.2.2) Quotes -->
+
+  <xs:complexType name="quote" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="name" type="name" />
+      <xs:element name="footnote" type="footnote" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="name">
+    <xs:simpleContent>
+      <xs:extension base="stringtype">
+	<xs:attribute name="itemid" type="idreftype" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- (6.3) Reference types -->
+
+  <xs:complexType name="mentionings">
+    <xs:sequence>
+      <xs:element name="reg-ref" type="reg-ref" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="reg-ref">
+    <xs:simpleContent>
+      <xs:extension base="stringtype">
+	<xs:attribute name="regest" type="idreftype" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="index-refs">
+    <xs:sequence>
+      <xs:element name="index-ref" type="index-ref" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="index-ref">
+    <xs:simpleContent>
+      <xs:extension base="stringtype">
+	<xs:attribute name="itemid" type="idreftype" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- (6.4) Concepts: Additional information -->
+
+  <xs:complexType name="addNames">
+    <xs:sequence>
+      <xs:element name="addName" type="stringtype" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
