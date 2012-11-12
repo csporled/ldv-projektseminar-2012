@@ -1,5 +1,6 @@
 package classtypes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.persistence.Entity;
@@ -13,8 +14,12 @@ import javax.persistence.Id;
  * @version 0.0.1
  */
 @Entity
-public class Regest {
+public class Regest implements Serializable {
 
+	/**
+	 * Default serial version id.
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Id used by database. DO NOT ACCESS OR MODIFY THIS ID!
 	 */
