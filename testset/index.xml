@@ -1,0 +1,532 @@
+<!--
+annotation syntax:
+
+optional element:
+the following element/tag is optional.
+
+mixed content:
+this element/tag (preceding name) may contain mixed content.
+
+unbounded occurrence:
+the occurrence of the following element/tag has no upper boundary.
+=> There may be 1-unlimited occurrences
+
+optional attribute:
+each attribute name following the colon is optional in the list of attributes of the preceding element/tag (of the same line).
+=> each attribute not within this set of attributes (following the colon) are required.
+
+element choice:
+a choice of one element out of the set of elements following this statement.
+the elements are separated by following pattern: "choice:[0-9]+" (numbers increasing by 1).
+the statement "end choice" marks the end of the last choosable element/tag.
+
+loop definition -> base=":base:" (:example:):
+a looping definition within an element sequence.
+:base: refers to the element/tag type of the looping element and
+:example: refers to an example of this element/tag type
+-->
+
+<!--
+annotation elements:
+
+String
+a string
+
+String(:RegEx:)
+a string which must match the regular expression defined in :RegEx:
+
+Choice(element1 | element2 | ...)
+a choice of one element out of the set of elements separated by '|'
+
+Boolean
+a boolean (true | false)
+
+IDREF
+a referrer to a uniquely defined ID within this document
+-->
+
+<index>
+	<index-info>
+		String
+	</index-info>
+	<item id="String(item_[0-9]+)" type="Choice(location | landmark | person | family | persongroup)" value="String">
+		<!-- element choice -->
+		<!-- choice:0 -->
+		<location-header>
+			<placeName>
+				<!-- optional element -->
+				<addNames>
+					<!-- unbounded occurrence -->
+					<addName>
+						String
+					</addName>
+				</addNames>
+				
+				<settlement type="String" w="Boolean" w-ref="String"> <!-- optional attribute: w-ref -->
+					String
+				</settlement>
+				
+				<!-- optional element -->
+				<reference-point>
+					String
+				</reference-point>
+				
+				<!-- optional element -->
+				<district>
+					String
+				</district>
+				
+				<!-- optional element -->
+				<region type="Choice(Bundesland | Departement | Provinz)">
+					String
+				</region>
+				
+				<!-- optional element -->
+				<country>
+					String
+				</country>
+			</placeName>
+			
+			<!-- optional element -->
+			<mentioned-in>
+				<!-- unbounded occurrence -->
+				<reg-ref regest="IDREF">
+					String
+				</reg-ref>
+			</mentioned-in>
+			
+			<!-- optional element -->
+			<index-refs>
+				<!-- unbounded occurrence -->
+				<index-ref itemid="IDREF"> <!-- optional attribute: itemid -->
+					String
+				</index-ref>
+			</index-refs>
+		</location-header>
+		
+		<!-- choice:1 -->
+		<landmark-header> <!-- mixed content -->
+			<geogName type="String">
+				<name>
+					String
+				</name>
+				
+				<!-- optional element -->
+				<addNames>
+					<!-- unbounded occurrence -->
+					<addName>
+						String
+					</addName>
+				</addNames>
+			</geogName>
+			
+			<!-- optional element -->
+			<mentioned-in>
+				<!-- unbounded occurrence -->
+				<reg-ref regest="IDREF">
+					String
+				</reg-ref>
+			</mentioned-in>
+			
+			<!-- optional element -->
+			<index-refs>
+				<!-- unbounded occurrence -->
+				<index-ref itemid="IDREF"> <!-- optional attribute: itemid -->
+					String
+				</index-ref>
+			</index-refs>
+		</landmark-header>
+		
+		<!-- choice:2 -->
+		<person-header>
+			<person id="String(person_[0-9]+)" itemid="IDREF"> <!-- optional attribute: itemid -->
+				<persName> <!-- mixed content -->
+					<!-- optional element -->
+					<forename>
+						String
+					</forename>
+				
+					<!-- optional element -->
+					<surname>
+						String
+					</surname>
+				
+					<!-- optional element -->
+					<genName>
+						String
+					</genName>
+				
+					<!-- optional element -->
+					<maidenname>
+						String
+					</maidenname>
+				
+					<!-- optional element -->
+					<roleName>
+						String
+					</roleName>
+				
+					<!-- optional element -->
+					<addNames>
+						<!-- unbounded occurrence -->
+						<addName>
+							String
+						</addName>
+					</addNames>
+				</persName>
+				
+				<!-- optional element -->
+				<description> <!-- mixed content -->
+					<!-- optional element -->
+					<!-- unbounded occurrence -->
+					<quote> <!-- mixed content -->
+						<!-- optional element -->
+						<!-- unbounded occurrence -->
+						<name itemid="IDREF">
+							String
+						</name>
+						
+						<!-- optional element -->
+						<!-- unbounded occurrence -->
+						<footnote id="String(fn_[0-9]+)">
+							<!-- loop definition -> base="content" (<description>) -->
+						</footnote>
+					</quote>
+				</description>
+				
+				<!-- optional element -->
+				<!-- unbounded occurrence -->
+				<mentioned-in>
+					<!-- unbounded occurrence -->
+					<reg-ref regest="IDREF">
+						String
+					</reg-ref>
+				</mentioned-in>
+				
+				<!-- optional element -->
+				<!-- unbounded occurrence -->
+				<related_concepts>
+				
+				</related_concepts>
+			</person>
+			
+			<!-- optional element -->
+			<mentioned-in>
+				<!-- unbounded occurrence -->
+				<reg-ref regest="IDREF">
+					String
+				</reg-ref>
+			</mentioned-in>
+			
+			<!-- optional element -->
+			<index-refs>
+				<!-- unbounded occurrence -->
+				<index-ref itemid="IDREF"> <!-- optional attribute: itemid -->
+					String
+				</index-ref>
+			</index-refs>
+		</person-header>
+		
+		<!-- choice:3 -->
+		<family-header> <!-- mixed content -->
+			<family-name>
+				<name>
+					String
+				</name>
+				
+				<!-- optional element -->
+				<addNames>
+					<!-- unbounded occurrence -->
+					<addName>
+						String
+					</addName>
+				</addNames>
+			</family-name>
+			
+			<!-- optional element -->
+			<location>
+				<!-- optional element -->
+				<addNames>
+					<!-- unbounded occurrence -->
+					<addName>
+						String
+					</addName>
+				</addNames>
+				
+				<settlement type="String" w="Boolean" w-ref="String"> <!-- optional attribute: w-ref -->
+					String
+				</settlement>
+				
+				<!-- optional element -->
+				<reference-point>
+					String
+				</reference-point>
+				
+				<!-- optional element -->
+				<district>
+					String
+				</district>
+				
+				<!-- optional element -->
+				<region type="Choice(Bundesland | Departement | Provinz)">
+					String
+				</region>
+				
+				<!-- optional element -->
+				<country>
+					String
+				</country>
+			</location>
+			
+			<!-- optional element -->
+			<mentioned-in>
+				<!-- unbounded occurrence -->
+				<reg-ref regest="IDREF">
+					String
+				</reg-ref>
+			</mentioned-in>
+			
+			<!-- optional element -->
+			<index-refs>
+				<!-- unbounded occurrence -->
+				<index-ref itemid="IDREF"> <!-- optional attribute: itemid -->
+					String
+				</index-ref>
+			</index-refs>
+		</family-header>
+		
+		<!-- choice:4 -->
+		<personGroup-header>
+			<group-name>
+				String
+			</group-name>
+			
+			<!-- optional element -->
+			<mentioned-in>
+				<!-- unbounded occurrence -->
+				<reg-ref regest="IDREF">
+					String
+				</reg-ref>
+			</mentioned-in>
+			
+			<!-- optional element -->
+			<index-refs>
+				<!-- unbounded occurrence -->
+				<index-ref itemid="IDREF"> <!-- optional attribute: itemid -->
+					String
+				</index-ref>
+			</index-refs>
+		</personGroup-header>
+		<!-- end choice -->
+		
+		<!-- element choice -->
+		<!-- choice:0 -->
+		<concept-body>
+			<!-- optional element -->
+			<related_concepts>
+				<!-- unbounded occurrence -->
+				<concept>
+					<name> <!-- mixed content -->
+						<!-- optional element -->
+						<!-- unbounded occurrence -->
+						<quote> <!-- mixed content -->
+							<!-- optional element -->
+							<!-- unbounded occurrence -->
+							<name itemid="IDREF">
+								String
+							</name>
+						
+							<!-- optional element -->
+							<!-- unbounded occurrence -->
+							<footnote id="String(fn_[0-9]+)">
+								<!-- loop definition -> base="content" (<description>) -->
+							</footnote>
+						</quote>
+					</name>
+					
+					<!-- optional element -->
+					<description> <!-- mixed content -->
+						<!-- optional element -->
+						<!-- unbounded occurrence -->
+						<quote> <!-- mixed content -->
+							<!-- optional element -->
+							<!-- unbounded occurrence -->
+							<name itemid="IDREF">
+								String
+							</name>
+						
+							<!-- optional element -->
+							<!-- unbounded occurrence -->
+							<footnote id="String(fn_[0-9]+)">
+								<!-- loop definition -> base="content" (<description>) -->
+							</footnote>
+						</quote>
+					</description>
+					
+					<!-- optional element -->
+					<mentioned-in>
+						<!-- unbounded occurrence -->
+						<reg-ref regest="IDREF">
+							String
+						</reg-ref>
+					</mentioned-in>
+					
+					<!-- optional element -->
+					<related_concepts>
+						<!-- loop definition -> base="related_concepts" (<related_concepts>) -->
+					</related_concepts>
+				</concept>
+				
+				<!-- unbounded occurrence -->
+				<person id="String(person_[0-9]+)" itemid="IDREF"> <!-- optional attribute: itemid -->
+					<persName> <!-- mixed content -->
+						<!-- optional element -->
+						<forename>
+							String
+						</forename>
+				
+						<!-- optional element -->
+						<surname>
+							String
+						</surname>
+				
+						<!-- optional element -->
+						<genName>
+							String
+						</genName>
+				
+						<!-- optional element -->
+						<maidenname>
+							String
+						</maidenname>
+				
+						<!-- optional element -->
+						<roleName>
+							String
+						</roleName>
+				
+						<!-- optional element -->
+						<addNames>
+							<!-- unbounded occurrence -->
+							<addName>
+								String
+							</addName>
+						</addNames>
+					</persName>
+				
+					<!-- optional element -->
+					<description> <!-- mixed content -->
+						<!-- optional element -->
+						<!-- unbounded occurrence -->
+						<quote> <!-- mixed content -->
+							<!-- optional element -->
+							<!-- unbounded occurrence -->
+							<name itemid="IDREF">
+								String
+							</name>
+						
+							<!-- optional element -->
+							<!-- unbounded occurrence -->
+							<footnote id="String(fn_[0-9]+)">
+								<!-- loop definition -> base="content" (<description>) -->
+							</footnote>
+						</quote>
+					</description>
+				
+					<!-- optional element -->
+					<!-- unbounded occurrence -->
+					<mentioned-in>
+						<!-- unbounded occurrence -->
+						<reg-ref regest="IDREF">
+							String
+						</reg-ref>
+					</mentioned-in>
+				
+					<!-- optional element -->
+					<!-- unbounded occurrence -->
+					<related_concepts>
+				
+					</related_concepts>
+				</person>
+			</related_concepts>
+		</concept-body>
+		
+		<!-- choice:1 -->
+		<listing-body>
+			<members>
+				<!-- unbounded occurrence -->
+				<person id="String(person_[0-9]+)" itemid="IDREF"> <!-- optional attribute: itemid -->
+					<persName> <!-- mixed content -->
+						<!-- optional element -->
+						<forename>
+							String
+						</forename>
+				
+						<!-- optional element -->
+						<surname>
+							String
+						</surname>
+				
+						<!-- optional element -->
+						<genName>
+							String
+						</genName>
+				
+						<!-- optional element -->
+						<maidenname>
+							String
+						</maidenname>
+				
+						<!-- optional element -->
+						<roleName>
+							String
+						</roleName>
+				
+						<!-- optional element -->
+						<addNames>
+							<!-- unbounded occurrence -->
+							<addName>
+								String
+							</addName>
+						</addNames>
+					</persName>
+				
+					<!-- optional element -->
+					<description> <!-- mixed content -->
+						<!-- optional element -->
+						<!-- unbounded occurrence -->
+						<quote> <!-- mixed content -->
+							<!-- optional element -->
+							<!-- unbounded occurrence -->
+							<name itemid="IDREF">
+								String
+							</name>
+						
+							<!-- optional element -->
+							<!-- unbounded occurrence -->
+							<footnote id="String(fn_[0-9]+)">
+								<!-- loop definition -> base="content" (<description>) -->
+							</footnote>
+						</quote>
+					</description>
+				
+					<!-- optional element -->
+					<!-- unbounded occurrence -->
+					<mentioned-in>
+						<!-- unbounded occurrence -->
+						<reg-ref regest="IDREF">
+							String
+						</reg-ref>
+					</mentioned-in>
+				
+					<!-- optional element -->
+					<!-- unbounded occurrence -->
+					<related_concepts>
+				
+					</related_concepts>
+				</person>
+			</members>
+		</listing-body>
+		<!-- end choice -->
+	</item>
+</index>	
