@@ -40,9 +40,9 @@ public class Main {
 				
 				irEntry = irProcessor.loadFile(currentFile);
 				irEntries.add(irEntry);
+
+				logToFile(currentFileName);
 			}
-			
-			logToFile(currentFileName);
 
 			exit(0, null);
 		} catch (Exception e) {

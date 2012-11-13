@@ -190,7 +190,7 @@ public class OptionParser {
 				}
 			}
 		} else {
-			log(path + ": Die Datei oder der Ordner konnte nicht gefunden werden.");
+			System.err.println("'" + path + "': Die Datei oder der Ordner konnte nicht gefunden werden.");
 			Main.exit(-1, null);
 		}
 
