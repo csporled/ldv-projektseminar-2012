@@ -159,7 +159,7 @@ public class Person implements Serializable {
 	 * @return the full name of a Person.
 	 */
 	public String getFullname () {
-		StringBuilder sb = new StringBuilder((hasTitle()?getTitle():"") + " " + (hasFirstname()?getForename():"") + " " + (hasSurname()?getSurname():"") + " " + (hasMaidenname()?"nee "+getMaidenname():""));
+		StringBuilder sb = new StringBuilder((hasTitle()?getTitle():"") + " " + (hasFirstname()?getFirstname():"") + " " + (hasSurname()?getSurname():"") + " " + (hasMaidenname()?"nee "+getMaidenname():""));
 		if (hasOtherNames()) {
 			sb.append(" (");
 			for (int i = 0; i < otherNames.size(); i++) {
