@@ -2,11 +2,14 @@ package classtypes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Embeddable;
 /**
  * Represents a simple Person.
  * Person has names, none of which are mandatory.
+ * This file requires objectdb.jar.
+ * It was written using objectdb version 2.4.3.
  * @author David Alfter
  * @version 0.0.1
  */
@@ -25,7 +28,7 @@ public class Person implements Serializable {
 	/**
 	 * ArrayList of additional or other names
 	 */
-	private ArrayList<String> otherNames;
+	private List<String> otherNames;
 	/**
 	 * Constructor.
 	 */
@@ -68,14 +71,14 @@ public class Person implements Serializable {
 	 * @return the first name
 	 * @see hasFirstname()
 	 */
-	public String getForename () {
+	public String getFirstname () {
 		return forename;
 	}
 	/**
 	 * Sets the first name of a Person.
 	 * @param firstname the first name of the Person
 	 */
-	public void setForename (String firstname) {
+	public void setFirstname (String firstname) {
 		this.forename = firstname;
 	}
 	/**
@@ -145,7 +148,7 @@ public class Person implements Serializable {
 	 * @return an ArrayList of String containing other names 
 	 * @see hasOtherNames()
 	 */
-	public ArrayList<String> getOtherNames () {
+	public List<String> getOtherNames () {
 		return otherNames;
 	}
 	/**
@@ -170,7 +173,9 @@ public class Person implements Serializable {
 		assert sb.length() > 0;
 		return sb.toString();
 	}
-
+	/**
+	 * Standard toString method.
+	 */
 	public String toString () {
 		return "Person: " + getFullname();
 	}

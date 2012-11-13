@@ -10,6 +10,8 @@ import javax.persistence.Id;
 /**
  * A simple class to represent a regest.
  * A regest has an id, contains people (a list of Person), textual content and eventually other information.
+ * This file requires objectdb.jar.
+ * It was written using objectdb version 2.4.3.
  * @see Person
  * @author David Alfter
  * @version 0.0.1
@@ -33,11 +35,11 @@ public class Regest implements Serializable {
 	/**
 	 * ArrayList of Person to store people
 	 */
-	private ArrayList<Person> people;
+	private List<Person> people;
 	/**
 	 * ArrayList of String to store additional information.
 	 */
-	private ArrayList<String> content;
+	private List<String> content;
 	/**
 	 * List for other content not fitting into people or content.
 	 */
@@ -100,7 +102,7 @@ public class Regest implements Serializable {
 	 * @return an ArrayList of Person
 	 * @see hasPeople()
 	 */
-	public ArrayList<Person> getPeople () {
+	public List<Person> getPeople () {
 		return people;
 	}
 	/**
@@ -109,7 +111,7 @@ public class Regest implements Serializable {
 	 * @return an ArrayList of String
 	 * @see hasContent()
 	 */
-	public ArrayList<String> getContent () {
+	public List<String> getContent () {
 		return content;
 	}
 	/**

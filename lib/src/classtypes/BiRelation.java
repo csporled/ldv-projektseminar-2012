@@ -7,6 +7,8 @@ import javax.persistence.Id;
 /**
  * A simple dual relation representation.
  * Two people (Person 1 and Person 2) are in relation of type T.
+ * This file requires objectdb.jar.
+ * It was written using objectdb version 2.4.3.
  * @author David Alfter
  * @version 0.0.1
  */

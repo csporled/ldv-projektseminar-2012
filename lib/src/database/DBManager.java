@@ -8,6 +8,8 @@ import javax.persistence.Persistence;
  * Classes that make use of this class typically
  * invoke "openDB()", persist a new element (em.persist(Element e)) and close the database (closeDB()).
  * If this class is not extended, EntityManager must be declared public!
+ * This file requires objectdb.jar.
+ * It was written using objectdb version 2.4.3.
  * @author David Alfter
  * @version 0.0.1
  */
