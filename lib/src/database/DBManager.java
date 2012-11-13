@@ -14,14 +14,14 @@ import javax.persistence.Persistence;
 public class DBManager {
 
 	private EntityManagerFactory emf;
-	EntityManager em;
+	protected EntityManager em;
 	/**
 	 * Constructor.
 	 * Opens the specified database or creates it, if it does not exist.
 	 * @param database the name of the database to access
 	 */
 	public DBManager (String database) {
-		String db = database.endsWith(".odb")?database:database+".odb";
+		String db = "./db/" + (database.endsWith(".odb")?database:database+".odb");
 		emf = Persistence.createEntityManagerFactory(db);
 	}
 	/**

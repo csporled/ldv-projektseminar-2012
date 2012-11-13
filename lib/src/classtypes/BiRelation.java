@@ -1,12 +1,23 @@
 package classtypes;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * A simple dual relation representation.
  * Two people (Person 1 and Person 2) are in relation of type T.
  * @author David Alfter
  * @version 0.0.1
  */
+@Entity
 public class BiRelation {
 
+	/**
+	 * Id used by the database. DO NOT ACCESS OR MODIFY!
+	 */
+	@Id @GeneratedValue
+	private int internid;
 	/**
 	 * People in this relation
 	 */
