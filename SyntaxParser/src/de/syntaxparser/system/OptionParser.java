@@ -72,7 +72,10 @@ public class OptionParser {
 	public void parse(String[] args) {
 		try {
 			//Set argument depending on argument type
-			for (int i=0; i<args.length; i++) {				
+			for (int i=0; i<args.length; i++) {	
+				if (args[i].equals("-h") || args[i].equals("-help") || args[i].equals("--help"))
+					usage();
+				
 				Option option = nameToOption.get(args[i]);
 				if (option == null) {
 					log(args[i] + ": Unbekannter Parameter");
@@ -80,8 +83,6 @@ public class OptionParser {
 				}
 				
 				seenOptions.add(args[i]);
-				if (args[i].equals("-h") || args[i].equals("-help"))
-					usage();
 				
 				Field field = nameToField.get(args[i]);
 				Class fieldType = field.getType();
@@ -111,7 +112,8 @@ public class OptionParser {
 			
 			//Check if either -file or -stdin is set
 			if (!seenOptions.contains("-file") && !seenOptions.contains("-stdin")) {
-				log("Zu wenig Parameter gesetzt! '-file' oder '-stdin' ist benötigt. Siehe '-h' für weitere Informationen über die Nutzung der Parameter.", "error");
+				System.err.println("Zu wenig Parameter gesetzt! '-file' oder '-stdin' ist benötigt. Siehe '-h' für weitere Informationen über die Nutzung der Parameter.");
+				Main.exit(-1, null);
 			}
 			
 			//Handle required arguments

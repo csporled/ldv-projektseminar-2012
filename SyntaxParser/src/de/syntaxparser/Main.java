@@ -104,7 +104,7 @@ public class Main {
 	 */
 	public static void exit(int exitCode, String fileName) {
 		try {
-			log.writeToFile(fileName);
+			//log.writeToFile(fileName);
 			System.err.println("\r\nProgramm beendet\r\nLaufzeit: " + ((System.currentTimeMillis()-start)/1000) + " Sekunden");
 			System.exit(exitCode);
 		} catch (Exception e) {
