@@ -10,8 +10,9 @@ import javax.persistence.Embeddable;
  * @author David Alfter
  * @version 0.0.1
  */
-@Embeddable
+@Embeddable 
 public class Person implements Serializable {
+
 
 	/**
 	 * Default serial version id.
@@ -155,11 +156,22 @@ public class Person implements Serializable {
 	 * @return the full name of a Person.
 	 */
 	public String getFullname () {
-		StringBuilder sb = new StringBuilder((hasTitle()?getTitle():"") + " " + (hasFirstname()?getForename():"") + " " + (hasSurname()?getSurname():"") + " " + (hasMaidenname()?" nee "+getMaidenname():""));
-		for (String s : otherNames) {
-			sb.append(" " + s);
+		StringBuilder sb = new StringBuilder((hasTitle()?getTitle():"") + " " + (hasFirstname()?getForename():"") + " " + (hasSurname()?getSurname():"") + " " + (hasMaidenname()?"nee "+getMaidenname():""));
+		if (hasOtherNames()) {
+			sb.append(" (");
+			for (int i = 0; i < otherNames.size(); i++) {
+				if (i == 0)
+					sb.append(otherNames.get(i));
+				else
+					sb.append(" " + otherNames.get(i));
+			}
+			sb.append(")");
 		}
 		assert sb.length() > 0;
 		return sb.toString();
+	}
+
+	public String toString () {
+		return "Person: " + getFullname();
 	}
 }

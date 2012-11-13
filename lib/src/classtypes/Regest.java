@@ -2,13 +2,14 @@ package classtypes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 /**
  * A simple class to represent a regest.
- * A regest has an id, contains people (a list of Person) and other textual content.
+ * A regest has an id, contains people (a list of Person), textual content and eventually other information.
  * @see Person
  * @author David Alfter
  * @version 0.0.1
@@ -37,6 +38,10 @@ public class Regest implements Serializable {
 	 * ArrayList of String to store additional information.
 	 */
 	private ArrayList<String> content;
+	/**
+	 * List for other content not fitting into people or content.
+	 */
+	private List<Serializable> other;
 	/**
 	 * Constructor. The only mandatory field is id.
 	 * @param id the id of the regest
@@ -106,5 +111,43 @@ public class Regest implements Serializable {
 	 */
 	public ArrayList<String> getContent () {
 		return content;
+	}
+	/**
+	 * Adds other information to this regest.
+	 * @param content content to add
+	 */
+	public <T extends Serializable> void addOther (T content) {
+		other.add(content);
+	}
+	/**
+	 * Checks for other content in this regest.
+	 * @return whether or not this regest contains other information
+	 */
+	public boolean hasOther () {
+		return other.size()==0?false:true;
+	}
+	/**
+	 * Returns a list of other content not fitting into people or content. 
+	 * Preferably first check whether or not this regest contains other information before invocation of this method.
+	 * @return other 
+	 * @see hasOther()
+	 */
+	public List<Serializable> getOther () {
+		return other;
+	}
+	/**
+	 * Standard toString method.
+	 * @return a string representation of this regest
+	 */
+	public String toString () {
+		StringBuilder sb = new StringBuilder();
+		sb.append(id).append("\nContent:\n");
+		for (String s : content) {	
+			sb.append(s).append("\n");
+		}
+		for (Person p : people) {
+			sb.append(p.toString()).append("\n");
+		}
+		return sb.toString();
 	}
 }
