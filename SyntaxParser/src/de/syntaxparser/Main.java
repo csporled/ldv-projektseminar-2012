@@ -1,6 +1,8 @@
 package de.syntaxparser;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,15 +37,32 @@ public class Main {
 		try {
 			IRProcessor irProcessor = new IRProcessor();
 			
-			for (File currentFile : files) {
-				currentFileName = currentFile.getName();
-				
-				irEntry = irProcessor.loadFile(currentFile);
-				irEntries.add(irEntry);
-
-				logToFile(currentFileName);
+			// if option '-stdin' is set -> read from standard input stream
+			if(options.stdin) {
+				BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+			    String line;
+			    List<String> lines = new ArrayList<String>();
+			    
+			    // loop while stdin is open and there's no empty line
+			    while ((line = in.readLine()) != null && line.length() != 0) {
+			    	lines.add(line);
+			    }
+			    
+			    // pass 'lines' ArrayList to irProcessor
+			    irProcessor.parse(lines);
 			}
+			// if option '-stdin' is not set, '-file' must be -> read from File objects within 'files' ArrayList
+			else {
+				for (File currentFile : files) {
+					currentFileName = currentFile.getName();
+					
+					irEntry = irProcessor.parse(currentFile);
+					irEntries.add(irEntry);
 
+					logToFile(currentFileName);
+				}
+			}
+			
 			exit(0, null);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -7,6 +7,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+/**
+ * An execution class to run a command within a separate process.
+ * 
+ * 
+ * @author nils
+ *
+ */
 public class Executer {
 	public BufferedReader input;
 	public BufferedReader error;

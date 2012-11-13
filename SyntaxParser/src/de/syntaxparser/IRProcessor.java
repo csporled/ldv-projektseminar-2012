@@ -36,48 +36,51 @@ public class IRProcessor {
 	Set<String> phraseMorphologySetNew = new HashSet<String>();
 
 	/**
+	 * Parse a List of Strings. 
+	 * 
+	 * @param lines List of Strings to parse
+	 * @return IREntry object containing the parsed information
+	 */
+	public IREntry parse(List<String> lines) {
+		for (String line : lines)
+			sentenceList.add(processLine(line));
+		
+		irEntry = new IREntry();
+		irEntry.setFilePath("unknown");
+		irEntry.setFileDir("unknown");
+		irEntry.setText(sentenceList);
+		
+		closeFile();
+
+		return irEntry;
+	}
+	
+	/**
 	 * Loads and processes provided file. Creates an IREntry element to record
 	 * every information found in text file.
 	 * 
-	 * @param currentFile
-	 *            - the berkeley parsed text file
-	 * @return - the IREntry element containing every information found in text
-	 *         file
+	 * @param currentFile the berkeley parsed text file
+	 * @return the IREntry element containing every information found in text file
 	 * @throws Exception
 	 */
-	public IREntry loadFile(File currentFile) throws Exception {
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				new FileInputStream(currentFile), "UTF-8"));
+	public IREntry parse(File currentFile) throws Exception {
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(currentFile), "UTF-8"));
 		String line = null;
 		lineCount = 0;
 
-		log("�ffne Datei f�r Analyse: " + currentFile);
+		log("Öffne Datei für Analyse: " + currentFile);
 
 		while ((line = readLine(in)) != null) {
 			sentence = processLine(line);
 			sentenceList.add(sentence);
 		}
+		
 		irEntry = new IREntry();
 		irEntry.setFilePath(currentFile.getPath());
 		irEntry.setFileDir(currentFile.getParent());
-
-		// log(irEntry.getSentences());
-		log("Dateianalyse abgeschlossen. (" + lineCount + " Zeilen eingelesen)",
-				2);
+		irEntry.setText(sentenceList);
 		
-		//log every seen morphology type
-		log("Wort-Morphologie: " + wordMorphologySet, 1); //word morphology
-		if (wordMorphologySetNull.size() > 0)
-			log("Wort-Morphologie (unbekannter Kasus): " + wordMorphologySetNull);
-		if (wordMorphologySetNew.size() > 0)
-			log("Wort-Morphologie (neu in Liste): " + wordMorphologySetNew);
-		log("Phrasen-Morphologie: " + phraseMorphologySet); //phrase morphology
-		if (phraseMorphologySetNull.size() > 0)
-			log("Phrasen-Morphologie (unbekannter Kasus): " + phraseMorphologySetNull);
-		if (phraseMorphologySetNew.size() > 0)
-			log("Phrasen-Morphologie (neu in Liste): " + phraseMorphologySetNew);
-		wordMorphologySet.addAll(phraseMorphologySet);
-		log("gesamte Liste der Morphologien: " + wordMorphologySet);
+		closeFile();
 
 		return irEntry;
 	}
@@ -287,5 +290,27 @@ public class IRProcessor {
 		lineCount++;
 
 		return line;
+	}
+
+	/**
+	 * Output some more inpormation regarding the parsing of this data.
+	 */
+	private void closeFile() {
+		log("Dateianalyse abgeschlossen. (" + lineCount + " Zeilen eingelesen)",
+				2);
+		
+		//log every seen morphology type
+		log("Wort-Morphologie: " + wordMorphologySet, 1); //word morphology
+		if (wordMorphologySetNull.size() > 0)
+			log("Wort-Morphologie (unbekannter Kasus): " + wordMorphologySetNull);
+		if (wordMorphologySetNew.size() > 0)
+			log("Wort-Morphologie (neu in Liste): " + wordMorphologySetNew);
+		log("Phrasen-Morphologie: " + phraseMorphologySet); //phrase morphology
+		if (phraseMorphologySetNull.size() > 0)
+			log("Phrasen-Morphologie (unbekannter Kasus): " + phraseMorphologySetNull);
+		if (phraseMorphologySetNew.size() > 0)
+			log("Phrasen-Morphologie (neu in Liste): " + phraseMorphologySetNew);
+		wordMorphologySet.addAll(phraseMorphologySet);
+		log("gesamte Liste der Morphologien: " + wordMorphologySet);
 	}
 }
