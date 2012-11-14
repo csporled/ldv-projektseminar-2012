@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.syntaxparser.elements.IREntry;
+import de.syntaxparser.system.DBManager;
 import de.syntaxparser.system.Log;
 import de.syntaxparser.system.OptionParser;
 
@@ -45,13 +46,16 @@ public class Main {
 			    String line;
 			    
 			    // loop while stdin is open and there's no empty line
+			    System.err.println("Reading input from stdin: (one sentence per line; an empty line stops reading.)");
 			    while ((line = in.readLine()) != null && line.length() != 0)
 			    	lines.add(line);
 			    
 			    // pass 'lines' ArrayList to irProcessor
+			    System.err.println("Parsing input...");
 				irEntries.add(irProcessor.parse(lines));
 				    
 				// writes log to a log file
+				System.err.println("Parsing finished. Writing result to log file.");
 				logToFile("stdin");
 			}
 			
@@ -61,12 +65,27 @@ public class Main {
 					currentFileName = currentFile.getName();
 					
 					// pass 'currentFile' file object to irProcessor
+					System.err.println("Parsing: " + currentFileName);
 					irEntries.add(irProcessor.parse(currentFile));
 					
 					// writes log to a log file
+					System.err.println("Parsing of " + currentFileName + " finished. Writing result to log file.\n");
 					logToFile(currentFileName);
 				}
 		    }
+			
+			// if option '-db' is set -> write to database
+			if (options.database != null) {
+				// create database with name set by '-db' option or open it if it already exists
+				DBManager dbManager = new DBManager(options.database);
+				
+				// open database, write every IREntry object from 'irEntries' List to it and close it afterwards
+				System.err.println("open/create database '" + options.database + "' and update data.");
+				dbManager.openDB();
+				for (IREntry irEntry : irEntries)
+					dbManager.getEntityManager().persist(irEntry);
+				dbManager.closeDB();
+			}
 			
 			exit(0, null);
 		} catch (Exception e) {

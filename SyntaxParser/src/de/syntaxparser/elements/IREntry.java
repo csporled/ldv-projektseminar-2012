@@ -8,6 +8,9 @@ package de.syntaxparser.elements;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+
+@Entity
 public class IREntry {
 	// global variables
 	private String filePath = null;

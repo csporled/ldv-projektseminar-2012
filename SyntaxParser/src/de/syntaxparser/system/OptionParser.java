@@ -31,6 +31,9 @@ public class OptionParser {
 	@Option(name = "-file", usage = "Datei/Ordner mit Dateien zur Analyse. Wenn nicht gesetzt, wird '-stdin' benötigt.")
 	public String filePath;
 	
+	@Option(name = "-db", usage = "Daten werden in einer ObjectDB Datenbank mit angegebenem Namen gespeichert.")
+	public String database;
+	
 	@Option(name = "-stdin", usage = "nötig, wenn vom Standard Input Stream (stdin), anstatt einer Datei geparst werden soll. Wenn nicht gesetzt, wird '-file' benötigt.")
 	public boolean stdin;
 	
