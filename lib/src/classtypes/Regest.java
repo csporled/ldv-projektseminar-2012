@@ -33,6 +33,10 @@ public class Regest implements Serializable {
 	 */
 	private String id;
 	/**
+	 * Classification of this regest
+	 */
+	private String classification;
+	/**
 	 * ArrayList of Person to store people
 	 */
 	private List<Person> people;
@@ -66,6 +70,27 @@ public class Regest implements Serializable {
 	 */
 	public void setId (String id) {
 		this.id = id;
+	}
+	/**
+	 * Sets the classification of this regest.
+	 * @param classify the classification of this regest
+	 */
+	public void setClassification (String classify) {
+		classification = classify;
+	}
+	/**
+	 * Returns the classification of this regest.
+	 * @return the classification of this regest
+	 */
+	public String getClassification () {
+		return classification;
+	}
+	/**
+	 * Checks whether this regest has been classified.
+	 * @return whether this regest has been classified
+	 */
+	public boolean isClassified () {
+		return classification == null ? false : true;
 	}
 	/**
 	 * Adds a Person to this regest.
