@@ -21,33 +21,35 @@ public class Main {
 		List<String> lines = new ArrayList<String>();
 		String line;
 		
-		System.err.println("Programm gestartet\r\n");
+		System.err.println("Started program\r\n");
 		
 		try {	    
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, "utf-8"));
 			
-			System.err.println("reading input: (one sentence per line; empty line stops reading)");
+			System.err.println("Reading input: (one sentence per line; empty line stops reading)");
 			while ((line = reader.readLine()) != null && !line.isEmpty()) {
 				lines.add(line);
 			}
 	    
 			// run Tagger in new thread
-			System.err.println("invoke berkeleyParser");
+			System.err.println("Invoking berkeleyParser");
 			Thread tagger = new Thread(new Tagger(lines));
 			tagger.start();
 			
 			// wait for tagger to finish
+			System.err.println("Berkeley parser invoked. Waiting for response...");
 			tagger.join();
 			
 			// check if taggedLines has been written by tagger thread
+			System.err.println("berkeley parsed output:\n");
 			if (taggedLines != null) {
-				//invoke SyntaxParser
-				System.err.println("invoke SyntaxParser");
+				for (String outputLine : taggedLines)
+					System.out.println(outputLine);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		System.err.println("\r\nProgramm beendet\r\nLaufzeit: " + ((System.currentTimeMillis()-start)/1000) + " Sekunden");
+		System.err.println("\nFinished in " + ((System.currentTimeMillis()-start)/1000) + " seconds");
 	}
 }
