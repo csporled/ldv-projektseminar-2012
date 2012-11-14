@@ -64,6 +64,8 @@ public class Log {
 			return;
 		
 		if (logDirCreated) {
+			if (!fileName.endsWith(".txt"))
+				fileName += ".txt";
 			fileName = fileName.replace(".txt", "_log.txt");
 			OutputStream os = new FileOutputStream(logDirPath + fileName);
 			Writer writer = new OutputStreamWriter(os,"UTF-8");

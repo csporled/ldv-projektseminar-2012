@@ -5,14 +5,15 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.syntaxparser.elements.IREntry;
 import de.syntaxparser.system.Log;
 import de.syntaxparser.system.OptionParser;
 
 /**
- * Main Class Prepares parameters and starts file processing.
- * ObjectDB-Package is needed for database access. (tested with version 2.4.4_10)
+ * Takes Input from files, directories with files (option '-file') or stdin (option '-stdin') to process.
+ * This Input needs to be processed by the berkeley parser (http://nlp.cs.berkeley.edu/).
  * 
  * @author nils
  * 
@@ -21,7 +22,9 @@ public class Main {
 	private static double start = System.currentTimeMillis();
 	private static Log log = new Log();
 	public static OptionParser options;
-
+	public static List<String> lines = new ArrayList<String>();
+	public static Map<String, List<String>> taggedLinesMap;
+	
 	// global variables
 	private static String currentFileName;
 
@@ -32,36 +35,38 @@ public class Main {
 		// if files == null -> read from stdin
 		List<File> files = options.getFiles();
 		List<IREntry> irEntries = new ArrayList<IREntry>();
-		IREntry irEntry = new IREntry();
 
 		try {
 			IRProcessor irProcessor = new IRProcessor();
 			
 			// if option '-stdin' is set -> read from standard input stream
-			if(options.stdin) {
+			if (options.stdin) {
 				BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			    String line;
-			    List<String> lines = new ArrayList<String>();
 			    
 			    // loop while stdin is open and there's no empty line
-			    while ((line = in.readLine()) != null && line.length() != 0) {
+			    while ((line = in.readLine()) != null && line.length() != 0)
 			    	lines.add(line);
-			    }
 			    
 			    // pass 'lines' ArrayList to irProcessor
-			    irProcessor.parse(lines);
+				irEntries.add(irProcessor.parse(lines));
+				    
+				// writes log to a log file
+				logToFile("stdin");
 			}
+			
 			// if option '-stdin' is not set, '-file' must be -> read from File objects within 'files' ArrayList
 			else {
-				for (File currentFile : files) {
+			    for (File currentFile : files) {
 					currentFileName = currentFile.getName();
 					
-					irEntry = irProcessor.parse(currentFile);
-					irEntries.add(irEntry);
-
+					// pass 'currentFile' file object to irProcessor
+					irEntries.add(irProcessor.parse(currentFile));
+					
+					// writes log to a log file
 					logToFile(currentFileName);
 				}
-			}
+		    }
 			
 			exit(0, null);
 		} catch (Exception e) {

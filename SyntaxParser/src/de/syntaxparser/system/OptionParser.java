@@ -149,8 +149,7 @@ public class OptionParser {
 	 * Print a usage description of all options
 	 */
 	private void usage() {
-		log("");
-		log("Argumentenliste mit Erkl�rungen:");
+		System.out.println("Argumentenliste mit Erkl�rungen:");
 		for (Option option : nameToOption.values()) {
 			System.out.println(String.format("%-30s%s", option.name(), option.usage()));
 		}
