@@ -3,8 +3,9 @@ package module;
  * A class for retrieving lemmas via Wortschatz Leipzig SOAP.
  * This class requires the full Baseform package, downloadable from http://wortschatz.uni-leipzig.de/axis/servlet/ServiceOverviewServlet.
  * This class can be used as command-line program and as instanced class.
+ * Command line usage is: java -cp PATH_TO_Lemmatizer.jar;PATH_TO_Baseform-complete-client.jar module.Lemmatizer WORD [Class]
  * @author David Alfter
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class Lemmatizer {
 	/**
