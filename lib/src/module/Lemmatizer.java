@@ -1,6 +1,4 @@
 package module;
-
-import de.uni_leipzig.wortschatz.webservice.client.baseform.BaseformClient;
 /**
  * A class for retrieving lemmas via Wortschatz Leipzig SOAP.
  * This class requires the full Baseform package, downloadable from http://wortschatz.uni-leipzig.de/axis/servlet/ServiceOverviewServlet.
@@ -9,12 +7,6 @@ import de.uni_leipzig.wortschatz.webservice.client.baseform.BaseformClient;
  * @version 0.0.1
  */
 public class Lemmatizer {
-
-	/**
-	 * Variable for verbosity.
-	 */
-	private static boolean v;
-	
 	/**
 	 * Lemmatizes a word, or returns null if no match of given type is found.
 	 * @param word the word to lemmatize
@@ -28,30 +20,21 @@ public class Lemmatizer {
 			t = type[0];
 		else
 			t = "V";
-		if (v)
-			System.out.println("Starting retrieval of baseform for word " + word + " of type " + t);
-		BaseformClient bc = new BaseformClient();
+		de.uni_leipzig.wortschatz.webservice.client.baseform.BaseformClient bc = new de.uni_leipzig.wortschatz.webservice.client.baseform.BaseformClient();
 		bc.setUsername("anonymous");
 		bc.setPassword("anonymous");
 		bc.setCorpus("de");
-		bc.addParameter("Wort", word);
-		if (v)
-			System.out.println("Executing webserver query...");
+		bc.addParameter("Wort", word);		
 		bc.execute();
-		String[][] res = bc.getResult();
-		if (v && res.length > 0)
-			System.out.println("Successfully retrieved " + res.length + " entries.");
+		String[][] res = bc.getResult();	
 		if (res.length == 0) {
 			System.err.println("Could not find baseform of " + word);
 			return null;
 		} else {
-		if (v)
-			System.out.println("Checking for baseforms of type " + t);
+		
 		for (String[] st2 : res)
 			for (String st3 : st2)
 				if (st3.equals(t)) {
-					if (v)
-						System.out.println("Found baseform " + st2[0] + " of form " + word + " of type " + t);
 					return st2[0];
 				}
 		}
@@ -64,16 +47,12 @@ public class Lemmatizer {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		int k = 0;
 		Lemmatizer l = new Lemmatizer();
 		if (args.length == 0)
-			System.err.println("Usage:\njava Lemmatizer [-v|--verbose] verb1 [verb2] [verb3] ...");
-		else if (args[0].equals("-v")||args[0].equals("--verbose")) {
-			k = 1;
-			v = true;
-		}
-		for (int i = k; i < args.length; i++) {
-			System.out.println(l.getLemma(args[i]));
-		}
+			System.err.println("Usage:\njava Lemmatizer word [type]");
+		else if (args.length == 1)
+			System.out.println(l.getLemma(args[0]));
+		else
+			System.out.println(l.getLemma(args[0], args[1]));
 	}
 }
