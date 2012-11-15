@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class IRSentence {
 	// global variables
 	private List<IRWord> words; //List of words in sentence

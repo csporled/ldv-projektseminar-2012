@@ -4,9 +4,11 @@
 
 package de.syntaxparser.elements;
 
+import javax.persistence.Embeddable;
+
 import de.syntaxparser.MorphologyProcessor;
 
-
+@Embeddable
 public class IRWord {
 	// global variables
 	private String token = null;

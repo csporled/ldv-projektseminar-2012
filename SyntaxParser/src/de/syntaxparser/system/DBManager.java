@@ -3,6 +3,7 @@ package de.syntaxparser.system;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
 /**
  * This class provides easy database access.
  * Classes that make use of this class typically
@@ -16,16 +17,18 @@ import javax.persistence.Persistence;
 public class DBManager {
 
 	private EntityManagerFactory emf;
-	protected EntityManager em;
+	private EntityManager em;
+	
 	/**
 	 * Constructor.
 	 * Opens the specified database or creates it, if it does not exist.
 	 * @param database the name of the database to access
 	 */
 	public DBManager (String database) {
-		String db = "./db/" + (database.endsWith(".odb")?database:database+".odb");
+		String db = (database.endsWith(".odb")?database:database+".odb");
 		emf = Persistence.createEntityManagerFactory(db);
 	}
+	
 	/**
 	 * Opens the database for reading and writing access.
 	 */
@@ -33,6 +36,7 @@ public class DBManager {
 		em = emf.createEntityManager();	
 		em.getTransaction().begin();
 	}
+	
 	/**
 	 * Closes the database reading and writing access.
 	 */
@@ -40,5 +44,9 @@ public class DBManager {
 		em.getTransaction().commit();
 		em.close();
 		emf.close();
+	}
+	
+	public EntityManager getEntityManager() {
+		return em;
 	}
 }

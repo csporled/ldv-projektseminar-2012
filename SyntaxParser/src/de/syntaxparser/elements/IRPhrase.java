@@ -5,8 +5,11 @@
 
 package de.syntaxparser.elements;
 
+import javax.persistence.Embeddable;
+
 import de.syntaxparser.MorphologyProcessor;
 
+@Embeddable
 public class IRPhrase {
 	private int leftBoundary;
 	private int rightBoundary;
