@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<sbr-regesten>
+<preface>
+</preface>
+<listBibl>
+<listBibl-info>
+</listBibl-info>
+<bibl id="bibl_01">
+</bibl>
+</listBibl>
+<abbrev-list>
+<list-info>
+</list-info>
+<entry>
+<abbr>
+</abbr>
+<expan>
+</expan>
+</entry>
+</abbrev-list>
+<initials-list>
+<list-info>
+</list-info>
+<entry>
+<abbr>
+</abbr>
+<expan>
+</expan>
+</entry>
+</initials-list>
+<regesten>
+
+<regest id="regest_15201220" author="Kl">
+	<date>
+		1520-12-20
+	</date> 
+	<type>
+		(b)
+	</type>
+	<content>
+		Adam von Heryngen, der dem Grafen Johann Ludwig von Nassau-Saarbrükken
+		sein Burghaus in der Burg zu Sarbrucken, genannt der von Kirkel Haus,
+		sowie seinen Anteil an dem Dorf Burbach, alles Burglehen der Grafschaft
+		Saarbrücken, für 200 rhein. Gulden verkauft hat, gelobt, dass er diese 200
+		Gulden innerhalb von 2 Jahren entweder rentbar anlegen oder auf sein unbeschwertes
+		Eigengut beweisen und die Renten bzw. das bewiesene Gut vom
+		Grafen zu Lehen tragen wird.
+	</content>
+	<original-date>
+		Donnerstag, St. Thomas Apost. Abend, 1520
+	</original-date>
+	<seal>
+		S.: A.
+	</seal>
+	<archives>
+		LASb
+	</archives> 
+	<print>
+		Best. Nassau-Saarbrücken II Nr. 356 - 
+	</print>
+	<original>
+		Ausf., Perg., S. aufgedr.;
+		RV: Kurzregest, N 4. ad 20 (16. Jh.) - (Kl)
+	</original>
+</regest>
+
+<regest id="regest_14810106" author="Ed">
+	<date>
+		1481-01-06
+	</date>
+	<content>
+		Dietrich smyt vonWilsdorf (Wilsztorff) quittiert dem Grafen Johann Ludwig
+		von Nassau-Saarbrücken den Empfang von 3 Maltern Korns, die er jährlich
+		auf der Kellnerei zu Saarbrücken zu empfangen hat, für die Jahre 1478 und
+		1479.
+	</content>
+	<original-date>
+		Uff den zwolfften tag 1480 more Meten.
+	</original-date>
+	<seal>
+		S.: Junker Johann vonWolfstein
+	</seal>
+	<archives>
+		LASb
+	</archives> 
+	<print>
+		Best. Nassau-Saarbrücken II Nr. 1635 - 
+	</print>
+	<original>
+		Ausf., Papier, S. Rest– (Ed nach Fb)
+	</original> 
+</regest>
+
+<regest id="regest_14810430" author="He">
+	<date>
+		1481-04-30
+	</date> 
+	<location>
+		Tours
+	</location>
+	<content>
+		König Ludwig [XI.] von Frankreich bittet den Grafen von Nassau um Geleit
+		für seine Leute bis Saarbrücken und von dort an weiter, soweit sein Geleit
+		geht.
+	</content>
+	<original-date>
+	</original-date>
+	<seal>
+	</seal>
+	<archives>
+		HessHStAWi
+	</archives> 
+	<print>
+		Abt. 130 I, Nr. II D 2, Nr. 10 fol. 158 - 
+	</print>
+	<original>
+		Ausf., Perg. - (He)
+	</original>
+</regest>
+
+<regest id="regest_14820315" author="Kl">
+	<date>
+		1482-03-15
+	</date> 
+	<location>
+		Saarbrücken
+	</location>
+	<content>
+		Vor der Propstei Saarbrücken verkaufen junffrauwe Eue von Ritenhoffen, des
+		(†) Hansen von Ritenhofen Tochter, und ihr Ehemann Johann von der Ecken
+		für 91 ½ rhein. Gulden (nuntzig anderhalben) ohne allen Zins dem Philipsen
+		von Clotten, derzeit Schultheiß zu Saarbrücken, und Elsen von Diemeringen,
+		dessen Ehefrau, eineWiese, glegen hie zu der Saren gein der Fischbach uber
+		neben (tuschen) derWiese, die dem vorgenannten Philipsen, dem Hansen
+		von Sarbrucken und dem Hans von Landingen, genant For Hans, gehört,
+		oben an die Wiedemhube, unten an des (†) Jongen Anthons Wiese, die nun
+		dem Hentz snyder gehört, angrenzend, sowie einen etzel an demWege gein
+		Malstat, neben des (†) Niclas von Folklingen etzel, der vormals ein Garten
+		war. Die Verkäufer tragenWährschaft nach der stede zu Sarbrucken recht,
+		friheit vnd gewonheit.
+	</content>
+	<original-date>
+		Friitdag nach Oculi 1481 more metensi
+	</original-date>
+	<seal>
+		Propsteisiegel
+	</seal>
+	<archives>
+		LASb
+	</archives> 
+	<print>
+		Best. Nassau-Saarbrücken II Nr. 6517 (ehem. Nr. 2393 fol.3) -
+	</print>
+	<original>
+		Ausf., Perg. S. ab; RV: Philips von Clotten, berurren die wisse von jungfraw
+		Euen wegen (16.Jh.). - Belangen die wiesen uff der Rammen und den
+		nassen gärten im Molster weg. A.c.1481 (17./18.Jh.) - (Kl)
+	</original>
+</regest>
+
+</regesten>
+<archive-list>
+<entry>
+</entry>
+</archive-list>
+<index>
+<index-info>
+</index-info>
+<item id="item_01" type="person" value="testperson">
+<person-header>
+<person id="person_01"> 
+<persName>
+</persName>
+</person>
+</person-header>
+</item>
+</index>
+</sbr-regesten>
