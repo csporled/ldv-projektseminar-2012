@@ -2,11 +2,11 @@
  * Class for single words.
  */
 
-package de.syntaxparser.elements;
+package de.regestanalyser.syntaxparser.elements;
 
 import javax.persistence.Embeddable;
 
-import de.syntaxparser.MorphologyProcessor;
+import de.regestanalyser.syntaxparser.MorphologyProcessor;
 
 @Embeddable
 public class IRWord {

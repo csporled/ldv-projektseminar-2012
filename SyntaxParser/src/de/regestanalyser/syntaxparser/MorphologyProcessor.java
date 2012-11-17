@@ -1,4 +1,4 @@
-package de.syntaxparser;
+package de.regestanalyser.syntaxparser;
 
 import java.util.HashMap;
 

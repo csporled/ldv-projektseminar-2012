@@ -4,7 +4,7 @@
  * Create a IREntry object per file and returns it to main class (Analyser)
  */
 
-package de.syntaxparser;
+package de.regestanalyser.syntaxparser;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,9 +16,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.syntaxparser.elements.IREntry;
-import de.syntaxparser.elements.IRSentence;
-import de.syntaxparser.elements.IRWord;
+import de.regestanalyser.syntaxparser.elements.IREntry;
+import de.regestanalyser.syntaxparser.elements.IRSentence;
+import de.regestanalyser.syntaxparser.elements.IRWord;
 
 public class IRProcessor {
 	// global variables

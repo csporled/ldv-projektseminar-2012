@@ -1,4 +1,4 @@
-package de.syntaxparser.system;
+package de.regestanalyser.syntaxparser.system;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.syntaxparser.Main;
+import de.regestanalyser.syntaxparser.Main;
 
 /**
  * Defines all arguments given as program parameters used by this Program
@@ -42,6 +42,9 @@ public class OptionParser {
 	
 	@Option(name = "-log", usage = "Wenn gesetzt, werden Logs mit diesen Tags zur Konsole ausgegeben (Tags getrennt durch Kommata)")
 	public Set<String> log;
+	
+	@Option(name = "-logDir", usage = "Angegebenes Verzeichnis für Log-Dateien verwenden.", defaulted = true)
+	public String logPath = "logs/";
 	
 	/**
 	 * Constructor: creates the sets used by the option processor.

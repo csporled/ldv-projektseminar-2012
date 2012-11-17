@@ -1,4 +1,4 @@
-package de.syntaxparser.system;
+package de.regestanalyser.syntaxparser.system;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

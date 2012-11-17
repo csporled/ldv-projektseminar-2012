@@ -1,4 +1,4 @@
-package de.syntaxtagger;
+package de.regestanalyser.syntaxtagger;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

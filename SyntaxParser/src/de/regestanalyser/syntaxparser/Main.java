@@ -1,4 +1,4 @@
-package de.syntaxparser;
+package de.regestanalyser.syntaxparser;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import de.syntaxparser.elements.IREntry;
-import de.syntaxparser.system.DBManager;
-import de.syntaxparser.system.Log;
-import de.syntaxparser.system.OptionParser;
+import de.regestanalyser.database.DBManager;
+import de.regestanalyser.syntaxparser.elements.IREntry;
+import de.regestanalyser.syntaxparser.system.Log;
+import de.regestanalyser.syntaxparser.system.OptionParser;
 
 /**
  * Takes Input from files, directories with files (option '-file') or stdin (option '-stdin') to process.
@@ -21,7 +21,7 @@ import de.syntaxparser.system.OptionParser;
  */
 public class Main {
 	private static double start = System.currentTimeMillis();
-	private static Log log = new Log();
+	private static Log log;
 	public static OptionParser options;
 	public static List<String> lines = new ArrayList<String>();
 	public static Map<String, List<String>> taggedLinesMap;
@@ -32,6 +32,7 @@ public class Main {
 	public static void main(String[] args) {
 		options = new OptionParser();
 		options.parse(args);
+		log = new Log(options.logPath);
 
 		// if files == null -> read from stdin
 		List<File> files = options.getFiles();
@@ -81,7 +82,6 @@ public class Main {
 				
 				// open database, write every IREntry object from 'irEntries' List to it and close it afterwards
 				System.err.println("open/create database '" + options.database + "' and update data.");
-				dbManager.openDB();
 				for (IREntry irEntry : irEntries)
 					dbManager.getEntityManager().persist(irEntry);
 				dbManager.closeDB();

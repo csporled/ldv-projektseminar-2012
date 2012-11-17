@@ -1,4 +1,4 @@
-package de.syntaxtagger;
+package de.regestanalyser.syntaxtagger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +12,8 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+
+import de.regestanalyser.database.DBManager;
 
 /**
  * Reads input from stdin or from database and sends it to berkeley parser.
@@ -53,7 +55,7 @@ public class Main {
 					
 					// query database
 					@SuppressWarnings("unchecked")
-					List<String> text = (List<String>) dbm.query("SELECT r.content FROM Regest r WHERE id="+options.getOptionValue("r")).getSingleResult();
+					List<String> text = (List<String>) dbm.getSingleResult("SELECT r.content FROM Regest r WHERE id="+options.getOptionValue("r"));
 					
 					// nothing retrieved?
 					if (text == null || text.isEmpty()) {
@@ -84,7 +86,7 @@ public class Main {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 		
 		exit(0);

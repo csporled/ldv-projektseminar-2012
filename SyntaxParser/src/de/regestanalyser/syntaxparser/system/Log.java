@@ -2,7 +2,7 @@
  * This class is for logging and creating log files.
  */
 
-package de.syntaxparser.system;
+package de.regestanalyser.syntaxparser.system;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,18 +19,26 @@ public class Log {
 	// global variables
 	private Map<String, List<String>> logMap;
 	private boolean logDirCreated = false;
-	private String logDirPath = "logs/";
+	private String logDirPath;
 	
-	public Log() {
+	public Log(String logPath) {
+		logDirPath = logPath;
+		
 		System.err.println();
 		logMap = new HashMap<String, List<String>>();
 		
 		File logDir = new File(logDirPath);
-		delete(logDir);
-		if (logDir.mkdir())
+//		delete(logDir);
+		if (logDir.exists() && logDir.isDirectory())
 			logDirCreated = true;
+		else if(!logDir.isFile()) {
+			if (logDir.mkdir())
+				logDirCreated = true;
+			else
+				System.err.println("Ordner für Log-Dateien konnte nicht erstellt werden. (" + logDir.getPath() + ")");
+		}
 		else
-			System.err.println("Ordner f�r Log-Dateien konnte nicht erstellt werden. (" + logDir.getPath() + ")");
+			System.err.println("Der angegebene Log-Ordner konnte nicht geöffnet werden.");
 	}
 	
 	/**

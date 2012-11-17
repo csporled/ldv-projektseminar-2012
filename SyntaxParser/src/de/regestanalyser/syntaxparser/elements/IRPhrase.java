@@ -3,11 +3,11 @@
  * Used inside the IRSentence class.
  */
 
-package de.syntaxparser.elements;
+package de.regestanalyser.syntaxparser.elements;
 
 import javax.persistence.Embeddable;
 
-import de.syntaxparser.MorphologyProcessor;
+import de.regestanalyser.syntaxparser.MorphologyProcessor;
 
 @Embeddable
 public class IRPhrase {

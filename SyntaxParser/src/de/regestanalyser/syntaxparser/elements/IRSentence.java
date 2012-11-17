@@ -4,7 +4,7 @@
  * Also saves a Map of frames constisting of a name and all its words as Integer indexes of the List of words.
  */
 
-package de.syntaxparser.elements;
+package de.regestanalyser.syntaxparser.elements;
 
 import java.util.ArrayList;
 import java.util.HashMap;

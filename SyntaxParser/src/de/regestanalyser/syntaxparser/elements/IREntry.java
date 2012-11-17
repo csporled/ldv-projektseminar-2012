@@ -4,7 +4,7 @@
  * Data is saved in form of IRSentences within the respective tag space declared in the text file.
  */
 
-package de.syntaxparser.elements;
+package de.regestanalyser.syntaxparser.elements;
 
 import java.util.List;
 
