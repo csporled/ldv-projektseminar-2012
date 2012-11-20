@@ -3,24 +3,33 @@ package de.regestanalyser.starter;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-import de.regestanalyser.classtypes.Regest;
+import classtypes.Regest;
 import de.regestanalyser.database.DBManager;
 
 @SuppressWarnings("serial")
@@ -33,12 +42,17 @@ public class Starter extends JFrame {
 	private static JTextField regestField;
 	private static JTextField lemmaField;
 	private static JTextField fileField;
-	
+
+	private static JEditorPane textPane;
 	private static JEditorPane outputPane;
+	private static JScrollPane outputScrollPane;
 	private static Document outputDoc;
-	private static String appDir;
 	private static String dbName;
 	private static DBManager dbManager;
+
+	private static LayerPopup waitingPopup;
+
+	public static String appDir;
 
 	/**
 	 * Launch the application.
@@ -49,6 +63,12 @@ public class Starter extends JFrame {
 				try {
 					Starter frame = new Starter();
 					frame.setVisible(true);
+
+					waitingPopup = new LayerPopup();
+					frame.getLayeredPane().add(waitingPopup,
+							JLayeredPane.MODAL_LAYER);
+					frame.addComponentListener(waitingPopup);
+					waitingPopup.setVisible(false);
 				} catch (Exception e) {
 					error(e);
 				}
@@ -58,21 +78,25 @@ public class Starter extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * @throws BadLocationException 
-	 * @throws UnsupportedEncodingException 
+	 * 
+	 * @throws BadLocationException
+	 * @throws UnsupportedEncodingException
 	 */
 	public Starter() {
-		// set path fields		
-		appDir = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+		// set path fields
+		appDir = getClass().getProtectionDomain().getCodeSource().getLocation()
+				.getPath();
 		if (appDir.endsWith(".jar"))
 			try {
-				appDir = URLDecoder.decode(new File(appDir).getParent(), "utf-8");
+				appDir = URLDecoder.decode(new File(appDir).getParent(),
+						"utf-8");
 			} catch (Exception e) {
 				error(e);
 			}
 		else
-			appDir = ("C:/Users/nils/Documents/Projects/Java/Projektseminar LDV 2012/Code/RegestAnalyser").replace("/", File.separator);
-		
+			appDir = ("C:/Users/nils/Documents/Projects/Java/Projektseminar LDV 2012/Code/RegestAnalyser")
+					.replace("/", File.separator);
+
 		setTitle("Regest Analyser Start Tool");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,15 +105,15 @@ public class Starter extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(10, 11, 227, 450);
 		contentPane.add(tabbedPane);
-		
+
 		JPanel toolPanel = new JPanel();
 		tabbedPane.addTab("Tools", null, toolPanel, null);
 		toolPanel.setLayout(null);
-		
+
 		JButton btnDatabaseInfo = new JButton("database info");
 		btnDatabaseInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -102,7 +126,7 @@ public class Starter extends JFrame {
 		});
 		btnDatabaseInfo.setBounds(10, 11, 202, 23);
 		toolPanel.add(btnDatabaseInfo);
-		
+
 		JButton btnNewButton = new JButton("get Regest");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -111,84 +135,107 @@ public class Starter extends JFrame {
 		});
 		btnNewButton.setBounds(10, 70, 202, 23);
 		toolPanel.add(btnNewButton);
-		
+
 		JLabel lblRegest = new JLabel("Regest:");
 		lblRegest.setBounds(10, 45, 54, 14);
 		toolPanel.add(lblRegest);
-		
+
 		regestField = new JTextField();
 		regestField.setBounds(92, 45, 120, 20);
 		toolPanel.add(regestField);
 		regestField.setColumns(10);
-		
+
 		JLabel lblLemmatize = new JLabel("Lemmatize:");
 		lblLemmatize.setBounds(10, 104, 72, 14);
 		toolPanel.add(lblLemmatize);
-		
+
 		lemmaField = new JTextField();
 		lemmaField.setBounds(92, 104, 120, 20);
 		toolPanel.add(lemmaField);
 		lemmaField.setColumns(10);
-		
+
 		JButton btnGetLemma = new JButton("get Lemma");
+		btnGetLemma.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				lemmatizer();
+			}
+		});
 		btnGetLemma.setBounds(10, 129, 202, 23);
 		toolPanel.add(btnGetLemma);
-		
-		JLabel lblSyntaxtaggersyntaxparser = new JLabel("SyntaxTagger/SyntaxParser:");
+
+		JLabel lblSyntaxtaggersyntaxparser = new JLabel(
+				"SyntaxTagger/SyntaxParser:");
 		lblSyntaxtaggersyntaxparser.setBounds(10, 163, 202, 14);
 		toolPanel.add(lblSyntaxtaggersyntaxparser);
-		
+
 		JLabel lblFile = new JLabel("File:");
 		lblFile.setBounds(10, 185, 54, 14);
 		toolPanel.add(lblFile);
-		
+
 		fileField = new JTextField();
 		fileField.setBounds(49, 182, 120, 20);
 		toolPanel.add(fileField);
 		fileField.setColumns(10);
-		
+
 		JLabel lblText = new JLabel("Text:");
 		lblText.setBounds(10, 210, 202, 14);
 		toolPanel.add(lblText);
-		
-		JEditorPane textPane = new JEditorPane();
-		textPane.setBounds(10, 227, 202, 150);
-		toolPanel.add(textPane);
-		
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBounds(10, 227, 202, 150);
+		toolPanel.add(scrollPane);
+
+		textPane = new JEditorPane();
+		scrollPane.setViewportView(textPane);
+
 		JButton btnTagger = new JButton("tagger");
+		btnTagger.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				tagger();
+			}
+		});
 		btnTagger.setBounds(10, 388, 89, 23);
 		toolPanel.add(btnTagger);
-		
+
 		JButton btnParser = new JButton("parser");
+		btnParser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				parser();
+			}
+		});
 		btnParser.setBounds(109, 388, 89, 23);
 		toolPanel.add(btnParser);
-		
+
 		JButton btnNewButton_2 = new JButton("...");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser(appDir);
 				int returnValue = fc.showOpenDialog(Starter.this);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					toolsPathField.setText(fc.getSelectedFile().getAbsolutePath());
+					fileField.setText(fc.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
 		btnNewButton_2.setBounds(179, 181, 33, 23);
 		toolPanel.add(btnNewButton_2);
-		
+
+		// waitingPanel.setVisible(false);
+
 		JPanel pathPanel = new JPanel();
 		tabbedPane.addTab("Paths", null, pathPanel, null);
 		pathPanel.setLayout(null);
-		
+
 		JLabel lblTest = new JLabel("Path to tools:");
 		lblTest.setBounds(10, 5, 202, 14);
 		pathPanel.add(lblTest);
-		
+
 		toolsPathField = new JTextField();
 		toolsPathField.setBounds(10, 20, 147, 20);
 		pathPanel.add(toolsPathField);
 		toolsPathField.setColumns(10);
-		
+
 		JButton button = new JButton("...");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -196,22 +243,23 @@ public class Starter extends JFrame {
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int returnValue = fc.showOpenDialog(Starter.this);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					toolsPathField.setText(fc.getSelectedFile().getAbsolutePath());
+					toolsPathField.setText(fc.getSelectedFile()
+							.getAbsolutePath());
 				}
 			}
 		});
 		button.setBounds(167, 19, 45, 23);
 		pathPanel.add(button);
-		
+
 		JLabel lblPathToLibraries = new JLabel("Path to libraries:");
 		lblPathToLibraries.setBounds(10, 51, 202, 14);
 		pathPanel.add(lblPathToLibraries);
-		
+
 		libPathField = new JTextField();
 		libPathField.setBounds(10, 66, 147, 20);
 		libPathField.setColumns(10);
 		pathPanel.add(libPathField);
-		
+
 		JButton btnNewButton_1 = new JButton("...");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -219,42 +267,53 @@ public class Starter extends JFrame {
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int returnValue = fc.showOpenDialog(Starter.this);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					libPathField.setText(fc.getSelectedFile().getAbsolutePath());
+					libPathField
+							.setText(fc.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
 		btnNewButton_1.setBounds(167, 65, 45, 23);
 		pathPanel.add(btnNewButton_1);
-		
+
 		JLabel lblPathToDatabase = new JLabel("Path to database:");
 		lblPathToDatabase.setBounds(10, 99, 202, 14);
 		pathPanel.add(lblPathToDatabase);
-		
+
 		dbPathField = new JTextField();
 		dbPathField.setBounds(10, 114, 147, 20);
 		dbPathField.setColumns(10);
 		pathPanel.add(dbPathField);
-		
+
 		JButton button_1 = new JButton("...");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser(appDir);
 				int returnValue = fc.showOpenDialog(Starter.this);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					libPathField.setText(fc.getSelectedFile().getAbsolutePath());
+					libPathField
+							.setText(fc.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
 		button_1.setBounds(167, 113, 45, 23);
 		pathPanel.add(button_1);
-		
+
 		outputPane = new JEditorPane();
-		outputDoc = outputPane.getDocument();
+		outputPane.setText("Welcome to Regest Analyser Tools Starter");
+		outputPane.setToolTipText("Program's output pane");
+		outputPane.setEditable(false);
 		outputPane.setBounds(247, 11, 337, 450);
-		contentPane.add(outputPane);
-		
-		setOutput(appDir);
-		
+
+		outputScrollPane = new JScrollPane();
+		outputScrollPane.setViewportBorder(new TitledBorder(null, "",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		// outputScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		outputScrollPane.setBounds(247, 11, 337, 450);
+
+		contentPane.add(outputScrollPane);
+		outputScrollPane.setViewportView(outputPane);
+		outputDoc = outputPane.getDocument();
+
 		if (appDir != null) {
 			String[] databases = new File(appDir).list(new FilenameFilter() {
 
@@ -262,46 +321,145 @@ public class Starter extends JFrame {
 				public boolean accept(File file, String name) {
 					return name.toLowerCase().endsWith(".odb");
 				}
-				
+
 			});
 			if (databases.length > 0) {
 				dbName = databases[0];
-				dbPathField.setText(appDir+File.separator+dbName);
+				dbPathField.setText(appDir + File.separator + dbName);
 			}
 		}
 
-		toolsPathField.setText((appDir != null?appDir+"/tools/":"tools/").replace("/", File.separator));
-		libPathField.setText((appDir != null?appDir+"/lib/":"lib/").replace("/", File.separator));
+		toolsPathField.setText((appDir != null ? appDir + "/tools/" : "tools/")
+				.replace("/", File.separator));
+		libPathField.setText((appDir != null ? appDir + "/lib/" : "lib/")
+				.replace("/", File.separator));
+	}
+
+	protected static void parser() {
+		List<String> stdout = new ArrayList<String>();
+
+		if (!fileField.getText().isEmpty()) {
+
+		} else if (!textPane.getText().isEmpty()) {
+
+		} else {
+			setOutput("No text or file has been set for parsing.");
+			return;
+		}
+
+		Threader threader = new Threader("java -jar SyntaxParser.jar -stdin");
+		threader.start();
+
+		try {
+			threader.join();
+
+			setOutput("result of parsing:\n");
+			for (String line : threader.getStdin()) {
+				addOutput(line);
+			}
+		} catch (InterruptedException e) {
+			error(e);
+		}
+	}
+
+	protected static void tagger() {
+		List<String> stdout = new ArrayList<String>();
+
+		if (!fileField.getText().isEmpty()) {
+			try {
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(new FileInputStream(
+								fileField.getText())));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					stdout.add(line);
+				}
+				reader.close();
+			} catch (Exception e) {
+				error(e);
+			}
+		} else if (!textPane.getText().isEmpty()) {
+			stdout.add(textPane.getText());
+		} else {
+			setOutput("No text or file has been set for tagging.");
+			return;
+		}
+
+		Threader threader = new Threader("java -jar SyntaxTagger.jar", stdout);
+		threader.start();
+
+		try {
+			threader.join();
+
+			setOutput("result of tagging:\n");
+			for (String line : threader.getStdin()) {
+				addOutput(line);
+			}
+		} catch (InterruptedException e) {
+			error(e);
+		}
+	}
+
+	protected static void lemmatizer() {
+		String word = lemmaField.getText();
+
+		if (!word.isEmpty()) {
+			Threader threader = new Threader(
+					"java -cp Lemmatizer.jar;../lib/baseform-complete-client.jar module.Lemmatizer "
+							+ word);
+			threader.start();
+
+			try {
+				threader.join();
+
+				setOutput("result of lemmatizer:\n");
+				for (String line : threader.getStdin()) {
+					addOutput(line);
+				}
+			} catch (InterruptedException e) {
+				error(e);
+			}
+		} else
+			setOutput("No word has been set for lemmatizing.");
 	}
 
 	protected static void getRegest() {
 		DBManager dbm = getDBManger();
-		
+
 		if (dbm != null) {
 			String regest;
-			if(!(regest = regestField.getText()).isEmpty()) {
+			if (!(regest = regestField.getText()).isEmpty()) {
 				try {
-					Regest r = dbm.getSingleResult("SELECT r FROM Regest r WHERE r.id LIKE '"+regest+"'", Regest.class);
+					Regest r = dbm.getSingleResult(
+							"SELECT r FROM Regest r WHERE r.id LIKE '" + regest
+									+ "'", Regest.class);
 
-					setOutput("display regest: "+r.getId());
-					addOutput("Content:\n"+r.getContent());
+					setOutput(r.getId() + ":");
+					addOutput("Content:\n" + r.getContent());
 				} catch (Exception e) {
 					error(e);
 				}
-			}
-			else
+			} else
 				setOutput("no regest for search is set.");
 		}
 	}
 
 	protected static void getDatabaseInfo() {
 		DBManager dbm = getDBManger();
-		
+
 		if (dbm != null) {
-			long regestCount;
 			try {
-				regestCount = (long) dbm.getSingleResult("SELECT COUNT(r) FROM Regest r");
-				setOutput("count of 'Regest': "+regestCount);
+				List<Regest> regestList = dbm.getResultList(
+						"SELECT r FROM Regest r", Regest.class);
+				setOutput("count of 'Regest': " + regestList.size());
+
+				for (Regest regest : regestList) {
+					addOutput("");
+					addOutput(regest.getId() + ":");
+					for (String line : regest.getContent()) {
+						addOutput(line);
+					}
+				}
 			} catch (Exception e) {
 				error(e);
 			}
@@ -320,8 +478,7 @@ public class Starter extends JFrame {
 					error(e);
 				}
 				return dbManager;
-			}
-			else {
+			} else {
 				setOutput("no database is set.");
 				return null;
 			}
@@ -330,19 +487,20 @@ public class Starter extends JFrame {
 
 	private static void addOutput(String string) {
 		try {
-			outputDoc.insertString(outputDoc.getLength(), string, null);
+			outputDoc.insertString(outputDoc.getLength(), string + "\n", null);
 		} catch (Exception e) {
 			error(e);
 		}
 	}
-	
+
 	private static void setOutput(String string) {
-		outputPane.setText(string);
+		outputPane.setText(string + "\n");
 	}
-	
+
 	protected static void error(Exception e) {
 		try {
-			setOutput(e.getMessage());
+//			setOutput(e.getMessage());
+			e.printStackTrace();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}

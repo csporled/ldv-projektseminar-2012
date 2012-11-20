@@ -101,7 +101,7 @@ public class DBManager {
 	 * @return an typed Object as result of the query
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Object> T getSingleResult(String query, Class<T> type) {
+	public <T> T getSingleResult(String query, Class<T> type) {
 		T result;
 		
 		result = (T) em.createQuery(query, type.getClass()).getSingleResult();
@@ -117,7 +117,7 @@ public class DBManager {
 	 * @return a List of typed Objects as result of the query
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Object> List<T> getResultList(String query, Class<T> type) {
+	public <T> List<T> getResultList(String query, Class<T> type) {
 		List<T> result;
 		
 		result = (List<T>) em.createQuery(query, type.getClass()).getResultList();
