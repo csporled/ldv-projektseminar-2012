@@ -5,20 +5,20 @@ Directory structure:
 ./lib/		contains library files needed for the tools
 ./tools/	contains the tools of the tool chain
 
-Following tools are provided within the tools/ directory:
+The following tools are provided within the tools/ directory:
 Lemmatizer.jar		takes a verb form and gets lemmatized infinitive form from Wortschatz Leipzig online (German)
 SyntaxTagger.jar	reads in text from stdin or database and invokes the berkeley parser on them.
 SyntaxParser.jar	reads in berkeley parsed text from stdin or database, creates java objects and 
 					stores those objects in a database.
 					
-Following libraries are provided within the lib/ directory:
+The following libraries are provided within the lib/ directory:
 dbManager.jar		provides database access.
 
 Needed external libraries:
 ObjectDB:
-Some of the tools need database access. For that purpose the ObjectDB database management system is used.
-(see http://www.objectdb.com/ for mere information)
-Following files are needed:
+Some of the tools need database access. For this purpose the ObjectDB database management system is used.
+(see http://www.objectdb.com/ for more information)
+The following files are needed:
 lib/converter.jar
 lib/explorer.jar
 lib/objectdb.jar
@@ -26,13 +26,13 @@ lib/objectdb-jee.jar
 
 Apache CLI:
 The Apache command line interface (CLI) is used by some of the tools.
-Following file is needed:
+The following file is needed:
 lib/commons-cli.jar
 
 Needed external binary files:
 berkeley parser:
 The syntaxParser tool uses the berkeley parser to parse the regest texts. For that purpose a grammar has been 
 trained to tag syntactical and morphologigal information. Those files are provided in the bin/berkeleyParser directory.
-Following files are needed:
+The following files are needed:
 bin/berkeleyParser/berkeleyParser.jar
 bin/berkeleyParser/gerNegra.01.utf8
