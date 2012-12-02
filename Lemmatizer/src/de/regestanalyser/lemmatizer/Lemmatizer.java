@@ -1,4 +1,7 @@
-package module;
+package de.regestanalyser.lemmatizer;
+
+import de.uni_leipzig.wortschatz.webservice.client.baseform.BaseformClient;
+
 /**
  * A class for retrieving lemmas via Wortschatz Leipzig SOAP.
  * This class requires the full Baseform package, downloadable from http://wortschatz.uni-leipzig.de/axis/servlet/ServiceOverviewServlet.
@@ -21,7 +24,7 @@ public class Lemmatizer {
 			t = type[0];
 		else
 			t = "V";
-		de.uni_leipzig.wortschatz.webservice.client.baseform.BaseformClient bc = new de.uni_leipzig.wortschatz.webservice.client.baseform.BaseformClient();
+		BaseformClient bc = new BaseformClient();
 		bc.setUsername("anonymous");
 		bc.setPassword("anonymous");
 		bc.setCorpus("de");

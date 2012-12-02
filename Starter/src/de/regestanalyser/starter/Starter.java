@@ -32,7 +32,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-import classtypes.Regest;
+//import classtypes.Regest;
+import de.regestanalyser.classtypes.Regest;
 import de.regestanalyser.database.DBManager;
 
 @SuppressWarnings("serial")
@@ -294,7 +295,7 @@ public class Starter extends JFrame {
 				JFileChooser fc = new JFileChooser(appDir);
 				int returnValue = fc.showOpenDialog(Starter.this);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					libPathField
+					dbPathField
 							.setText(fc.getSelectedFile().getAbsolutePath());
 				}
 			}
@@ -433,9 +434,7 @@ public class Starter extends JFrame {
 		String word = lemmaField.getText();
 
 		if (word != null) {
-			threadPool
-					.submit("java -cp Lemmatizer.jar;../lib/baseform-complete-client.jar module.Lemmatizer "
-							+ word);
+			threadPool.submit("java -jar Lemmatizer.jar " + word);
 
 			setOutput("Lemmatize word: " + word);
 			threadPool.finishTasks();
@@ -462,6 +461,8 @@ public class Starter extends JFrame {
 			} else
 				setOutput("no regest for search is set.");
 		}
+		
+		dbm.closeDB();
 	}
 
 	protected static void getDatabaseInfo() {
@@ -484,6 +485,8 @@ public class Starter extends JFrame {
 				error(e);
 			}
 		}
+		
+		dbm.closeDB();
 	}
 
 	protected static synchronized void addOutput(String string) {

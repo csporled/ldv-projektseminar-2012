@@ -1,12 +1,10 @@
-package test;
+package de.regestanalyser.tests;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-
-import classtypes.Person;
-import classtypes.Regest;
-import database.DBManager;
+import de.regestanalyser.classtypes.Regest;
+import de.regestanalyser.classtypes.Person;
+import de.regestanalyser.database.DBManager;
 
 public class DBPT extends DBManager {
 
@@ -44,22 +42,19 @@ public class DBPT extends DBManager {
 		r.addPerson(p1);
 		r.addPerson(p2);
 		r.addPerson(p3);
-		//save the regest to the database
-		em.persist(r);
+		//create database manager and save the regest to the database
+		persist(r);
 		
 	}
 	
 	public void testretrieve () {
 		//retrieve all objects in database
-		TypedQuery<Regest> q = em.createQuery("SELECT r FROM Regest r", Regest.class);
-		List<Regest> li = q.getResultList();
+		List<Regest> li = getResultList("SELECT r FROM Regest r", Regest.class);
 		//print result
 		System.out.println(li.get(0).toString());		
 	}
 	
 	public void run () {
-		//open database. self explanatory
-		openDB ();
 		//call persist
 		testpersist();
 		//call retrieve
