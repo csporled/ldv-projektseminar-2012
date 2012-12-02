@@ -1,18 +1,17 @@
 README for RegestAnalyser
 
 Directory structure:
-./bin/		contains binary files needed for the tools
 ./lib/		contains library files needed for the tools
-./tools/	contains the tools of the tool chain
+./bin/		contains binary files of the toolchain and external tools
 
-The following tools are provided within the tools/ directory:
+The following tools are provided within the toolchain:
 Lemmatizer.jar		takes a verb form and gets lemmatized infinitive form from Wortschatz Leipzig online (German)
 SyntaxTagger.jar	reads in text from stdin or database and invokes the berkeley parser on them.
 SyntaxParser.jar	reads in berkeley parsed text from stdin or database, creates java objects and 
 					stores those objects in a database.
 					
 The following libraries are provided within the lib/ directory:
-dbManager.jar		provides database access.
+dbManager.jar					provides a commonly used database manager.
 
 Needed external libraries:
 ObjectDB:
@@ -28,6 +27,13 @@ Apache CLI:
 The Apache command line interface (CLI) is used by some of the tools.
 The following file is needed:
 lib/commons-cli.jar
+
+Wortschatz Leipzig: Baseform:
+The lemmatizer uses web tools provided by Leipzig University for project Deutscher Wortschatz.
+(http://wortschatz.uni-leipzig.de/ - website in German!)
+This tool uses an internet connection to receive the base form of a given german verb.
+The following file is needed:
+lib/Baseform-complete-client.jar
 
 Needed external binary files:
 berkeley parser:
