@@ -30,9 +30,10 @@ public class Main {
 	private static String currentFileName;
 
 	public static void main(String[] args) {
+		log = new Log();
 		options = new OptionParser();
 		options.parse(args);
-		log = new Log(options.logPath);
+		log.setPath(options.logPath);
 
 		// if files == null -> read from stdin
 		List<File> files = options.getFiles();
@@ -48,7 +49,7 @@ public class Main {
 			    
 			    // loop while stdin is open and there's no empty line
 			    System.err.println("Reading input from stdin: (one sentence per line; an empty line stops reading.)");
-			    while ((line = in.readLine()) != null && line.length() != 0)
+			    while ((line = in.readLine()) != null && !line.isEmpty())
 			    	lines.add(line);
 			    
 			    // pass 'lines' ArrayList to irProcessor
@@ -89,8 +90,7 @@ public class Main {
 			
 			exit(0, null);
 		} catch (Exception e) {
-			e.printStackTrace();
-			// log(e.toString(), "error");
+			log(e);
 			exit(-1, currentFileName);
 		}
 	}
@@ -102,6 +102,7 @@ public class Main {
 	 *            the Exception to be logged
 	 */
 	public static void log(Exception e) {
+		log(e.getLocalizedMessage(), "error");
 		e.printStackTrace();
 	}
 
@@ -117,7 +118,7 @@ public class Main {
 		log.add(logEntry, tag);
 
 		if (options.hasLog() && options.log.contains(tag) || tag.equals("error") && !options.noError)
-			System.out.printf("%-78s\r\n", logEntry);
+			System.out.println(logEntry);
 	}
 
 	/**

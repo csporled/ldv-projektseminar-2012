@@ -1,6 +1,8 @@
 package de.regestanalyser.starter;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -24,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.BadLocationException;
@@ -34,9 +37,15 @@ import de.regestanalyser.database.DBManager;
 
 @SuppressWarnings("serial")
 public class Starter extends JFrame {
+	// while coding adjust this to test functionality
+	private static final String PATH_TO_REGEST_ANALYSER_FOLDER = "C:/Users/nils/Documents/Projects/Java/Projektseminar LDV 2012/Code/RegestAnalyser";
+
+	// global variables
+	private static ThreadPool threadPool;
+	private static Starter frame;
 
 	private static JPanel contentPane;
-	private static JTextField toolsPathField;
+	private static JTextField binPathField;
 	private static JTextField libPathField;
 	private static JTextField dbPathField;
 	private static JTextField regestField;
@@ -50,7 +59,7 @@ public class Starter extends JFrame {
 	private static String dbName;
 	private static DBManager dbManager;
 
-	private static LayerPopup waitingPopup;
+	private static WaitingLayer waitingLayer;
 
 	public static String appDir;
 
@@ -58,17 +67,14 @@ public class Starter extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		threadPool = new ThreadPool();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Starter frame = new Starter();
+					frame = new Starter();
 					frame.setVisible(true);
 
-					waitingPopup = new LayerPopup();
-					frame.getLayeredPane().add(waitingPopup,
-							JLayeredPane.MODAL_LAYER);
-					frame.addComponentListener(waitingPopup);
-					waitingPopup.setVisible(false);
+					setWaitingLayer();
 				} catch (Exception e) {
 					error(e);
 				}
@@ -83,7 +89,7 @@ public class Starter extends JFrame {
 	 * @throws UnsupportedEncodingException
 	 */
 	public Starter() {
-		// set path fields
+		// set path to application directory
 		appDir = getClass().getProtectionDomain().getCodeSource().getLocation()
 				.getPath();
 		if (appDir.endsWith(".jar"))
@@ -94,9 +100,9 @@ public class Starter extends JFrame {
 				error(e);
 			}
 		else
-			appDir = ("C:/Users/nils/Documents/Projects/Java/Projektseminar LDV 2012/Code/RegestAnalyser")
-					.replace("/", File.separator);
+			appDir = PATH_TO_REGEST_ANALYSER_FOLDER;
 
+		// set layout
 		setTitle("Regest Analyser Start Tool");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -221,8 +227,6 @@ public class Starter extends JFrame {
 		btnNewButton_2.setBounds(179, 181, 33, 23);
 		toolPanel.add(btnNewButton_2);
 
-		// waitingPanel.setVisible(false);
-
 		JPanel pathPanel = new JPanel();
 		tabbedPane.addTab("Paths", null, pathPanel, null);
 		pathPanel.setLayout(null);
@@ -231,10 +235,10 @@ public class Starter extends JFrame {
 		lblTest.setBounds(10, 5, 202, 14);
 		pathPanel.add(lblTest);
 
-		toolsPathField = new JTextField();
-		toolsPathField.setBounds(10, 20, 147, 20);
-		pathPanel.add(toolsPathField);
-		toolsPathField.setColumns(10);
+		binPathField = new JTextField();
+		binPathField.setBounds(10, 20, 147, 20);
+		pathPanel.add(binPathField);
+		binPathField.setColumns(10);
 
 		JButton button = new JButton("...");
 		button.addActionListener(new ActionListener() {
@@ -243,8 +247,8 @@ public class Starter extends JFrame {
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int returnValue = fc.showOpenDialog(Starter.this);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					toolsPathField.setText(fc.getSelectedFile()
-							.getAbsolutePath());
+					binPathField
+							.setText(fc.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
@@ -299,7 +303,7 @@ public class Starter extends JFrame {
 		pathPanel.add(button_1);
 
 		outputPane = new JEditorPane();
-		outputPane.setText("Welcome to Regest Analyser Tools Starter");
+		outputPane.setText("Welcome to Regest Analyser Tools Starter\n");
 		outputPane.setToolTipText("Program's output pane");
 		outputPane.setEditable(false);
 		outputPane.setBounds(247, 11, 337, 450);
@@ -308,12 +312,14 @@ public class Starter extends JFrame {
 		outputScrollPane.setViewportBorder(new TitledBorder(null, "",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		// outputScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		outputScrollPane.setBounds(247, 11, 337, 450);
+		outputScrollPane.setBounds(241, 11, 343, 450);
 
 		contentPane.add(outputScrollPane);
 		outputScrollPane.setViewportView(outputPane);
 		outputDoc = outputPane.getDocument();
 
+		// set path fields
+		// path to database
 		if (appDir != null) {
 			String[] databases = new File(appDir).list(new FilenameFilter() {
 
@@ -323,102 +329,116 @@ public class Starter extends JFrame {
 				}
 
 			});
+			// if .odb file exists in application directory, set it as database
 			if (databases.length > 0) {
 				dbName = databases[0];
-				dbPathField.setText(appDir + File.separator + dbName);
+				dbPathField.setText((appDir + "/" + dbName).replace("/",
+						File.separator));
 			}
 		}
 
-		toolsPathField.setText((appDir != null ? appDir + "/tools/" : "tools/")
+		// path to tools
+		binPathField.setText((appDir != null ? appDir + "/bin/" : "bin/")
 				.replace("/", File.separator));
+
+		// path to libraries
 		libPathField.setText((appDir != null ? appDir + "/lib/" : "lib/")
 				.replace("/", File.separator));
 	}
 
+	public static void toggleWaitingLayer() {
+		waitingLayer.setVisible(waitingLayer.isVisible() ? false : true);
+	}
+	
+	public static void setWaitinLayerVisibility(boolean bool) {
+		waitingLayer.setVisible(bool);
+	}
+
 	protected static void parser() {
 		List<String> stdout = new ArrayList<String>();
+		String command = null;
 
-		if (!fileField.getText().isEmpty()) {
-
+		if (!fileField.getText().isEmpty() && !textPane.getText().isEmpty()) {
+			setOutput("Both a file AND Text have been set for parsing.\nPlease use only one.");
+			return;
+		} else if (!fileField.getText().isEmpty()) {
+			// invoke SyntaxParser with file path from fileField
+			command = String.format(
+					"java -jar SyntaxParser.jar -log ir -logDir \"../log/SyntaxParser/\" -file \"%s\"",
+					fileField.getText());
+			setOutput("Parsing file(s):");
+			threadPool.submit(command);
 		} else if (!textPane.getText().isEmpty()) {
-
+			// invoke SyntaxParser with Text from textPane as stdout
+			for (String line : textPane.getText().split("\n")) {
+				if (!line.isEmpty())
+					stdout.add(line);
+			}
+			command = "java -jar SyntaxParser.jar -log ir -logDir \"../log/SyntaxParser/\" -stdin";
+			setOutput(String.format("Parsing %d sentence(s):", stdout.size()));
+			threadPool.submit(command, stdout);
 		} else {
 			setOutput("No text or file has been set for parsing.");
 			return;
 		}
 
-		Threader threader = new Threader("java -jar SyntaxParser.jar -stdin");
-		threader.start();
-
-		try {
-			threader.join();
-
-			setOutput("result of parsing:\n");
-			for (String line : threader.getStdin()) {
-				addOutput(line);
-			}
-		} catch (InterruptedException e) {
-			error(e);
-		}
+		threadPool.finishTasks();
 	}
 
 	protected static void tagger() {
 		List<String> stdout = new ArrayList<String>();
 
-		if (!fileField.getText().isEmpty()) {
+		if (!fileField.getText().isEmpty() && !textPane.getText().isEmpty()) {
+			setOutput("Both a file AND Text have been set for tagging.\nPlease use only one.");
+			return;
+		} else if (!fileField.getText().isEmpty()) {
+			// open file and save content as list of strings (line-wise)
 			try {
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(new FileInputStream(
 								fileField.getText())));
 				String line;
 				while ((line = reader.readLine()) != null) {
-					stdout.add(line);
+					if (!line.isEmpty())
+						stdout.add(line);
 				}
 				reader.close();
 			} catch (Exception e) {
 				error(e);
 			}
 		} else if (!textPane.getText().isEmpty()) {
-			stdout.add(textPane.getText());
+			// 
+			for (String line : textPane.getText().split("\n")) {
+				if (!line.isEmpty())
+					stdout.add(line);
+			}
 		} else {
 			setOutput("No text or file has been set for tagging.");
 			return;
 		}
 
-		Threader threader = new Threader("java -jar SyntaxTagger.jar", stdout);
-		threader.start();
+		// one thread with multiple lines as stdout
+		// threadPool.submit("java -jar SyntaxTagger.jar", stdout);
 
-		try {
-			threader.join();
+		// multiple threads with one line as stdout
+		for (String line : stdout)
+			threadPool.submit(new ExecutingCallable(
+					"java -jar SyntaxTagger.jar", line));
 
-			setOutput("result of tagging:\n");
-			for (String line : threader.getStdin()) {
-				addOutput(line);
-			}
-		} catch (InterruptedException e) {
-			error(e);
-		}
+		setOutput(String.format("Tagging %d sentence(s):", stdout.size()));
+		threadPool.finishTasks();
 	}
 
 	protected static void lemmatizer() {
 		String word = lemmaField.getText();
 
-		if (!word.isEmpty()) {
-			Threader threader = new Threader(
-					"java -cp Lemmatizer.jar;../lib/baseform-complete-client.jar module.Lemmatizer "
+		if (word != null) {
+			threadPool
+					.submit("java -cp Lemmatizer.jar;../lib/baseform-complete-client.jar module.Lemmatizer "
 							+ word);
-			threader.start();
 
-			try {
-				threader.join();
-
-				setOutput("result of lemmatizer:\n");
-				for (String line : threader.getStdin()) {
-					addOutput(line);
-				}
-			} catch (InterruptedException e) {
-				error(e);
-			}
+			setOutput("Lemmatize word: " + word);
+			threadPool.finishTasks();
 		} else
 			setOutput("No word has been set for lemmatizing.");
 	}
@@ -466,6 +486,65 @@ public class Starter extends JFrame {
 		}
 	}
 
+	protected static synchronized void addOutput(String string) {
+		try {
+			outputDoc.insertString(outputDoc.getLength(), string + "\n", null);
+		} catch (Exception e) {
+			error(e);
+		}
+	}
+
+	protected static synchronized void setOutput(String string) {
+		// outputPane.setText(string + "\n");
+		addOutput("\n====================\n");
+		addOutput(string);
+	}
+
+	protected static String getBinPath() {
+		return binPathField.getText();
+	}
+
+	protected static void error(Exception e) {
+		try {
+			setOutput(e.getStackTrace().toString());
+			e.printStackTrace();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private static void setWaitingLayer() {
+		waitingLayer = new WaitingLayer();
+		waitingLayer.setLayout(new BorderLayout());
+
+		frame.getLayeredPane().add(waitingLayer, JLayeredPane.MODAL_LAYER);
+		frame.addComponentListener(waitingLayer);
+
+		// center label
+		JLabel waitingLabel = new JLabel("Please wait...");
+		waitingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+		// change text style within label
+		Font currFont = waitingLabel.getFont();
+		waitingLabel.setFont(new Font(currFont.getName(), Font.BOLD
+				+ Font.ITALIC, 25));
+
+		// add label to layer
+		waitingLayer.add(BorderLayout.CENTER, waitingLabel);
+
+		// set layer invisible at startup
+		waitingLayer.setVisible(false);
+
+		// add toggle button
+		JButton toggleWaiting = new JButton("toggle waiting layer");
+		toggleWaiting.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				toggleWaitingLayer();
+			}
+		});
+		waitingLayer.add(BorderLayout.NORTH, toggleWaiting);
+	}
+
 	private static DBManager getDBManger() {
 		if (dbManager != null)
 			return dbManager;
@@ -482,27 +561,6 @@ public class Starter extends JFrame {
 				setOutput("no database is set.");
 				return null;
 			}
-		}
-	}
-
-	private static void addOutput(String string) {
-		try {
-			outputDoc.insertString(outputDoc.getLength(), string + "\n", null);
-		} catch (Exception e) {
-			error(e);
-		}
-	}
-
-	private static void setOutput(String string) {
-		outputPane.setText(string + "\n");
-	}
-
-	protected static void error(Exception e) {
-		try {
-//			setOutput(e.getMessage());
-			e.printStackTrace();
-		} catch (Exception e1) {
-			e1.printStackTrace();
 		}
 	}
 }

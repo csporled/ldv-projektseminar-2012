@@ -66,7 +66,6 @@ public class IRProcessor {
 	public IREntry parse(File currentFile) throws Exception {
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(currentFile), "UTF-8"));
 		String line = null;
-		lineCount = 0;
 
 		log("Öffne Datei für Analyse: " + currentFile);
 
@@ -94,6 +93,7 @@ public class IRProcessor {
 	 * @return - the IRSentence object with every sentence relevant information
 	 */
 	private IRSentence processLine(String line) {
+		lineCount++;
 		sentence = new IRSentence();
 
 		log(line);
@@ -287,7 +287,6 @@ public class IRProcessor {
 	 */
 	private String readLine(BufferedReader in) throws IOException {
 		String line = in.readLine();
-		lineCount++;
 
 		return line;
 	}
